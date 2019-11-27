@@ -1,11 +1,8 @@
 function getData() {
-    console.log('Getting data...');
-
-    const nbaHeaders = new Headers();
     
     const fetchData = async () => {
         try {
-            const dataRes = await fetch("https://api-nba-v1.p.rapidapi.com/players/lastName/hard", {
+            const dataRes = await fetch("https://api-nba-v1.p.rapidapi.com/players/lastName/johnso", {
                 "method": "GET",
                 "headers": {
                     "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
@@ -13,12 +10,12 @@ function getData() {
                 }
             })
             const data = await dataRes.json();
-            debugger;
 
             if(data.api.players.length === 0){
                 throw new Error('There are no players in the NBA with the lastname "Hard"; please try again');
+            } else {
+                console.log(data);
             }
-            console.log(data);
         } catch(e) {
             console.log(e);
         }
@@ -28,9 +25,7 @@ function getData() {
 }
 
 function watchForm() {
-    console.log('Waiting for submission...');
-
-    $('form').submit(event => {
+    $('#nbaPlayerSearch').submit(event => {
         event.preventDefault();
 
         getData();
