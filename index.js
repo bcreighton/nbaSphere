@@ -5,7 +5,13 @@ function getData() {
     
     const fetchData = async () => {
         try {
-            const dataRes = await fetch('https://api.social-searcher.com/v2/users?q=barak%20obama&key=626e71bd528d38b317758d064c6441c7&network=facebook');
+            const dataRes = await fetch("https://api-nba-v1.p.rapidapi.com/players/lastName/harden", {
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                    "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
+                }
+            })
             const data = await dataRes.json();
             console.log(data);
         } catch(e) {
