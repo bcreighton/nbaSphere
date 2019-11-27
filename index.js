@@ -1,3 +1,5 @@
+const youtubeAPIKey = 'AIzaSyBOeJM_9wrehRc1wH9v-gJE-RFsmjbuwps'
+
 function getNBAPlayer() {
     
     const fetchNBAPlayer = async () => {
@@ -50,6 +52,27 @@ function getNBAPlayerNews() {
     fetchNBAPlayerNews();
 }
 
+function getNBAPlayerVideos() {
+    const fetchNBAPlayerVideos = async () => {
+        try {
+            const nbaPlayerVideosRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=James%20Harden&safeSearch=strict&key=${youtubeAPIKey}`)
+
+            const nbaPlayerVideos = await nbaPlayerVideosRes.json();
+
+            if(!nbaPlayerVideosRes.ok){
+                throw new Error(nbaPlayerVideos.error.message);
+            }
+            
+            console.log(nbaPlayerVideos);
+
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    fetchNBAPlayerVideos();
+}
+
 function watchForms() {
     $('#nbaPlayerSearch').submit(event => {
         event.preventDefault();
@@ -61,6 +84,12 @@ function watchForms() {
         event.preventDefault();
 
         getNBAPlayerNews();
+    })
+    
+    $('#nbaPlayerVideoSearch').submit(event => {
+        event.preventDefault();
+
+        getNBAPlayerVideos();
     })
 }
 
