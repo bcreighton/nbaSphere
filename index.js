@@ -73,6 +73,31 @@ function getNBAPlayerVideos() {
     fetchNBAPlayerVideos();
 }
 
+function getNBAPlayerSocial() {
+    const fetchNBAPlayerSocial = async () => {
+        try {
+            const nbaPlayerSocialRes = await fetch("https://newsapi.org/v2/everything?q=james-harden", {
+                "method": "GET",
+                "headers": {
+                    "X-Api-Key": "bbbae998198647ef8f363a9b624282de"
+                }
+            })
+            const nbaPlayerSocial = await nbaPlayerSocialRes.json();
+
+            // if(nbaPlayerNews.status === 'error'){
+            //     throw new Error(nbaPlayerNews.message);
+            // }
+            
+            console.log(nbaPlayerSocial);
+
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    fetchNBAPlayerSocial();
+}
+
 function watchForms() {
     $('#nbaPlayerSearch').submit(event => {
         event.preventDefault();
