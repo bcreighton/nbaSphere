@@ -5,7 +5,7 @@ function getData() {
     
     const fetchData = async () => {
         try {
-            const dataRes = await fetch("https://api-nba-v1.p.rapidapi.com/players/lastName/harden", {
+            const dataRes = await fetch("https://api-nba-v1.p.rapidapi.com/players/lastName/hard", {
                 "method": "GET",
                 "headers": {
                     "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
@@ -13,9 +13,14 @@ function getData() {
                 }
             })
             const data = await dataRes.json();
+            debugger;
+
+            if(data.api.players.length === 0){
+                throw new Error('There are no players in the NBA with the lastname "Hard"; please try again');
+            }
             console.log(data);
         } catch(e) {
-            console.log('Something went wrong...');
+            console.log(e);
         }
     }
 
