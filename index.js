@@ -76,17 +76,17 @@ function getNBAPlayerVideos() {
 function getNBAPlayerSocial() {
     const fetchNBAPlayerSocial = async () => {
         try {
-            const nbaPlayerSocialRes = await fetch("https://newsapi.org/v2/everything?q=james-harden", {
+            const nbaPlayerSocialRes = await fetch("https://api.social-searcher.com/v2/search?q=james%20harden&network=facebook&key=626e71bd528d38b317758d064c6441c", {
                 "method": "GET",
                 "headers": {
-                    "X-Api-Key": "bbbae998198647ef8f363a9b624282de"
+                    'Accept':'application/json'
                 }
             })
             const nbaPlayerSocial = await nbaPlayerSocialRes.json();
 
-            // if(nbaPlayerNews.status === 'error'){
-            //     throw new Error(nbaPlayerNews.message);
-            // }
+            if(!nbaPlayerSocialRes.ok){
+                throw new Error(nbaPlayerSocial.meta.message);
+            }
             
             console.log(nbaPlayerSocial);
 
@@ -115,6 +115,12 @@ function watchForms() {
         event.preventDefault();
 
         getNBAPlayerVideos();
+    })
+
+    $('#nbaPlayerSocialSearch').submit(event => {
+        event.preventDefault();
+
+        getNBAPlayerSocial();
     })
 }
 
