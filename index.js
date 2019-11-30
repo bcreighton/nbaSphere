@@ -76,7 +76,7 @@ function getNBAPlayerVideos() {
 function getNBAPlayerSocial() {
     const fetchNBAPlayerSocial = async () => {
         try {
-            const nbaPlayerSocialRes = await fetch("https://api.social-searcher.com/v2/search?q=james%20harden&network=facebook&key=626e71bd528d38b317758d064c6441c", {
+            const nbaPlayerSocialRes = await fetch("https://api.social-searcher.com/v2/search?q=james%20harden&network=facebook&key=626e71bd528d38b317758d064c6441c7", {
                 "method": "GET",
                 "headers": {
                     'Accept':'application/json'
