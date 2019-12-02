@@ -10,22 +10,47 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
+
+    <section id="searchTypeButtonContainer" class="container">
+        <h2>Change Search Type</h2>
+        <button class="mainButton hidden" id="playerButton">Player</button>
+        <button class="mainButton" id="teamButton">Team</button>
+        <button class="mainButton" id="conferenceButton">Conference</button>
+    </section>
+
     <form id="nbaPlayerSearch" class="searchForm">
-        <input type="text">
-        <button type="submit">Get Player Data</button>
+        <input type="text" id="playerLastName" placeholder="NBA PLAYER'S LAST NAME">
+        <button type="submit">Find Player!</button>
+    </form>
+    <form id="nbaTeamSearch" class="searchForm hidden">
+        <input type="text" id="teamName" placeholder="TEAM NAME">
+        <button type="submit">Find Team!</button>
+    </form>
+    <form id="nbaConferenceSearch" class="searchForm hidden">
+        <input type="text" id="conferenceName" placeholder="CONFERENCE">
+        <button type="submit">Find Conference!</button>
     </form>
 
-    <form id="nbaPlayerNewsSearch" class="searchForm">
-        <button type="submit">Get Player News</button>
-    </form>
+    <section id="searchResultsContainer" class='hidden'>
+        <ul id="searchResults">
 
-    <form id="nbaPlayerVideoSearch" class="searchForm">
-        <button type="submit">Get Player Videos</button>
-    </form>
+        </ul>
+    </section>
 
-    <form id="nbaPlayerSocialSearch" class="searchForm">
-        <button type="submit">Get Player Social</button>
-    </form>
+    <section id="userSelectionContainer" class='hidden'>
+        <div id="profile" class="container">
+            
+        </div>
+        <div id="highlights" class="container">
+
+        </div>
+        <div id="news" class="container">
+
+        </div>
+        <div id="social" class="container">
+
+        </div>
+    </section>
     
     <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
