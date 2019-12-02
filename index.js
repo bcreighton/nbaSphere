@@ -6,28 +6,51 @@ function displayNBAPlayerSearchResults(players) {
     $('#searchResults').empty();
 
     for(let i = 0; i < players.length; i++){
-        debugger;
+        const firstName = players[i].firstName;
+        const lastName = players[i].lastName;
+        const teamId = players[i].teamId;
         let pos = players[i].leagues.standard.pos;
         let jersey = players[i].leagues.standard.jersey;
 
-        if(pos === undefined){
+        if(pos === ''){
             pos = 'FA';
         } 
 
-        if(jersey === undefined) {
+        if(jersey === '') {
             jersey = 'N/A';
         }
 
 
         $('#searchResults').append(
             `<li class='resultItem'>
-                <h3 class='playerName'>${players[i].firstName} ${players[i].lastName}</h3>
-                <p class='position'>${players[i].leagues.standard.pos}</p>
-                <p class='jerseyNumber'>${players[i].leagues.standard.jersey}</p>
+                <h3 class='playerName'>${firstName} ${lastName}</h3>
+                <p class='team'>${teamId}</p>
+                <p class='position'>${pos}</p>
+                <p class='jerseyNumber'>${jersey}</p>
             </li>`
         );
     }
+    $('#searchResultsContainer').removeClass('hidden');
+}
 
+function displayNBATeamSearchResults(teams) {
+    $('#searchResults').empty();
+
+    for(let i = 0; i < teams.length; i++){
+        const teamLogo = teams[i].logo;
+        const teamName = teams[i].fullName;
+        const conference = teams[i].leagues.standard.confName;
+        const division = teams[i].leagues.standard.divName;
+
+        $('#searchResults').append(
+            `<li class='resultItem'>
+                <img src='${teamLogo}' alt='${teamName} Logo' class='teamLogo'>
+                <h3 class='teamName'>${teamName}</h3>
+                <p class='teamConference'>${conference}</p>
+                <p class='teamDivision'>${division}</p>
+            </li>`
+        );
+    }
     $('#searchResultsContainer').removeClass('hidden');
 }
 
@@ -46,8 +69,7 @@ function getNBAPlayer(player) {
             const nbaPlayers = nbaPlayerData.api.players;
 
             if(nbaPlayers.length === 0){
-                // provide input value once developed
-                throw new Error('There are no players in the NBA with the lastname "Hard"; please try again');
+                throw new Error(`There are no players in the NBA with the lastname "${player}"; please try again`);
             } else {
                 displayNBAPlayerSearchResults(nbaPlayers)
                 console.log(nbaPlayers);
@@ -72,7 +94,6 @@ function getNBAPlayerTeamName(teamID) {
                 }
             })
             const nbaPlayerTeamData = await nbaPlayerTeamRes.json();
-            debugger;
             const nbaPlayerTeam = nbaPlayerTeamData.api.teams;
 
             if(nbaPlayerTeam.length === 0){
@@ -101,12 +122,14 @@ function getNBATeam(team) {
                 }
             })
             const nbaTeamData = await nbaTeamRes.json();
+            const nbaTeams = nbaTeamData.api.teams;
 
-            if(nbaTeamData.api.teams.length === 0){
+            if(nbaTeams.length === 0){
                 // provide input value once developed
                 throw new Error(`There are no teams in the NBA with the name "${team}"; please try again`);
             } else {
-                console.log(nbaTeamData);
+                displayNBATeamSearchResults(nbaTeams);
+                console.log(nbaTeams);
             }
         } catch(e) {
             console.log(e);
@@ -270,6 +293,12 @@ function getNBASocial(nbaSearchItem) {
     getNBASocialInsta(nbaSearchItem);
 }
 
+function getSupportingData() {
+    getNBANews();
+    getNBAVideos();
+    getNBASocial();
+}
+
 function searchTypeController() {
     $('#teamButton').click(function() {
         $(this).addClass('hidden');
@@ -309,14 +338,24 @@ function watchPlayerForm() {
         const playerLastName = $('#playerLastName').val();
 
         getNBAPlayer(playerLastName);
-        getNBANews();
-        getNBAVideos();
-        getNBASocial();
+        getSupportingData();
+    })
+}
+
+function watchTeamForm() {
+    $('#nbaTeamSearch').submit(event => {
+        event.preventDefault();
+
+        const teamName = $('#teamName').val();
+
+        getNBATeam(teamName);
+        getSupportingData();
     })
 }
 
 function listeners() {
     watchPlayerForm();
+    watchTeamForm();
     searchTypeController();
 }
 
