@@ -54,6 +54,41 @@ function displayNBATeamSearchResults(teams) {
     $('#searchResultsContainer').removeClass('hidden');
 }
 
+function displayNBAConferenceSearchResults(conference, conferenceTeams) {
+    $('#searchResults').empty();
+
+    if(conference === 'west') {
+        $('#searchResults').append(
+            `<li class='resultItem'>
+                <h3 class='teamName'>Western Conference</h3>
+            </li>`
+        )
+    } else {
+        $('#searchResults').append(
+            `<li class='resultItem'>
+                <h3 class='teamName'>Eastern Conference</h3>
+            </li>`
+        )
+    }
+
+    for(let i = 0; i < conferenceTeams.length; i++){
+        const conferenceTeamLogo = conferenceTeams[i].logo;
+        const conferenceTeamName = conferenceTeams[i].fullName;
+        const teamConference = conferenceTeams[i].leagues.standard.confName;
+        const teamDivision = conferenceTeams[i].leagues.standard.divName;
+
+        $('#searchResults').append(
+            `<li class='resultItem'>
+                <img src='${conferenceTeamLogo}' alt='${conferenceTeamName} Logo' class='teamLogo'>
+                <h3 class='teamName'>${conferenceTeamName}</h3>
+                <p class='teamConference'>${teamConference}</p>
+                <p class='teamDivision'>${teamDivision}</p>
+            </li>`
+        );
+    }
+    $('#searchResultsContainer').removeClass('hidden');
+}
+
 function getNBAPlayer(player) {
     
     const fetchNBAPlayer = async () => {
@@ -97,7 +132,7 @@ function getNBAPlayerTeamName(teamID) {
             const nbaPlayerTeam = nbaPlayerTeamData.api.teams;
 
             if(nbaPlayerTeam.length === 0){
-                // provide input value once developed
+
                 throw new Error(`Error pulling team data`);
             } else {
                 return(nbaPlayerTeam[0].fullName);
@@ -125,7 +160,7 @@ function getNBATeam(team) {
             const nbaTeams = nbaTeamData.api.teams;
 
             if(nbaTeams.length === 0){
-                // provide input value once developed
+
                 throw new Error(`There are no teams in the NBA with the name "${team}"; please try again`);
             } else {
                 displayNBATeamSearchResults(nbaTeams);
@@ -151,12 +186,14 @@ function getNBAConference(conference) {
                 }
             })
             const nbaConferenceData = await nbaConferenceRes.json();
+            const nbaConference = nbaConferenceData.api.teams;
 
-            if(nbaConferenceData.api.teams.length === 0){
-                // provide input value once developed
-                throw new Error(`There is no conferencein the NBA by the name "${conference}"; please try again`);
+            if(nbaConference.length === 0){
+
+                throw new Error(`There is no conference in the NBA by the name "${conference}"; please try again`);
             } else {
-                console.log(nbaConferenceData);
+                displayNBAConferenceSearchResults(conference, nbaConference)
+                console.log(nbaConference);
             }
         } catch(e) {
             console.log(e);
@@ -353,9 +390,21 @@ function watchTeamForm() {
     })
 }
 
+function watchConferenceForm() {
+    $('#nbaConferenceSearch').submit(event => {
+        event.preventDefault();
+
+        const conferenceName = $('#conferenceName').val();
+
+        getNBAConference(conferenceName);
+        getSupportingData();
+    })
+}
+
 function listeners() {
     watchPlayerForm();
     watchTeamForm();
+    watchConferenceForm();
     searchTypeController();
 }
 
