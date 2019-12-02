@@ -2,6 +2,16 @@
 
 const youtubeAPIKey = 'AIzaSyBOeJM_9wrehRc1wH9v-gJE-RFsmjbuwps';
 
+function convertConferenceNames(conference) {
+    if(conference === 'West') {
+        conference = 'Western';
+    } else if(conference === 'East') {
+        conference = 'Eastern';
+    }
+
+    return conference;
+}
+
 function displayNBAPlayerSearchResults(players) {
     $('#searchResults').empty();
 
@@ -23,10 +33,10 @@ function displayNBAPlayerSearchResults(players) {
 
         $('#searchResults').append(
             `<li class='resultItem'>
-                <h3 class='playerName'>${firstName} ${lastName}</h3>
-                <p class='team'>${teamId}</p>
-                <p class='position'>${pos}</p>
-                <p class='jerseyNumber'>${jersey}</p>
+                <h3 class='playerName' 'searchItemTitle'>${firstName} ${lastName}</h3>
+                <p class='team' 'seachSubItem'>${teamId}</p>
+                <p class='position' 'seachSubItem'>Position: ${pos}</p>
+                <p class='jerseyNumber' 'seachSubItem'>#${jersey}</p>
             </li>`
         );
     }
@@ -39,15 +49,15 @@ function displayNBATeamSearchResults(teams) {
     for(let i = 0; i < teams.length; i++){
         const teamLogo = teams[i].logo;
         const teamName = teams[i].fullName;
-        const conference = teams[i].leagues.standard.confName;
+        const conference = convertConferenceNames(teams[i].leagues.standard.confName);
         const division = teams[i].leagues.standard.divName;
 
         $('#searchResults').append(
             `<li class='resultItem'>
                 <img src='${teamLogo}' alt='${teamName} Logo' class='teamLogo'>
-                <h3 class='teamName'>${teamName}</h3>
-                <p class='teamConference'>${conference}</p>
-                <p class='teamDivision'>${division}</p>
+                <h3 class='teamName' 'searchItemTitle'>${teamName}</h3>
+                <p class='teamConference' 'seachSubItem'>Conference: ${conference}</p>
+                <p class='teamDivision' 'seachSubItem'>Division: ${division}</p>
             </li>`
         );
     }
@@ -60,13 +70,15 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     if(conference === 'west') {
         $('#searchResults').append(
             `<li class='resultItem'>
-                <h3 class='teamName'>Western Conference</h3>
+                <h3 class='conferenceName' 'searchItemTitle'>Western Conference</h3>
+                <p>16 Teams</p>
             </li>`
         )
     } else {
         $('#searchResults').append(
             `<li class='resultItem'>
-                <h3 class='teamName'>Eastern Conference</h3>
+                <h3 class='conferenceName' 'searchItemTitle'>Eastern Conference</h3>
+                <p>16 Teams</p>
             </li>`
         )
     }
@@ -74,15 +86,15 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     for(let i = 0; i < conferenceTeams.length; i++){
         const conferenceTeamLogo = conferenceTeams[i].logo;
         const conferenceTeamName = conferenceTeams[i].fullName;
-        const teamConference = conferenceTeams[i].leagues.standard.confName;
+        const teamConference = convertConferenceNames(conferenceTeams[i].leagues.standard.confName);
         const teamDivision = conferenceTeams[i].leagues.standard.divName;
 
         $('#searchResults').append(
             `<li class='resultItem'>
                 <img src='${conferenceTeamLogo}' alt='${conferenceTeamName} Logo' class='teamLogo'>
-                <h3 class='teamName'>${conferenceTeamName}</h3>
-                <p class='teamConference'>${teamConference}</p>
-                <p class='teamDivision'>${teamDivision}</p>
+                <h3 class='teamName' 'searchItemTitle'>${conferenceTeamName}</h3>
+                <p class='teamConference' 'seachSubItem'>Conference: ${teamConference}</p>
+                <p class='teamDivision' 'seachSubItem'>Division: ${teamDivision}</p>
             </li>`
         );
     }
@@ -375,7 +387,6 @@ function watchPlayerForm() {
         const playerLastName = $('#playerLastName').val();
 
         getNBAPlayer(playerLastName);
-        getSupportingData();
     })
 }
 
@@ -386,7 +397,6 @@ function watchTeamForm() {
         const teamName = $('#teamName').val();
 
         getNBATeam(teamName);
-        getSupportingData();
     })
 }
 
@@ -394,10 +404,23 @@ function watchConferenceForm() {
     $('#nbaConferenceSearch').submit(event => {
         event.preventDefault();
 
-        const conferenceName = $('#conferenceName').val();
+        let conferenceName = $('#conferenceName').val();
+
+        if(conferenceName === 'western' || conferenceName === 'Western') {
+            conferenceName = 'west';
+        } else if(conferenceName === 'eastern' || conferenceName === 'Eastern') {
+            conferenceName = 'east';
+        }
 
         getNBAConference(conferenceName);
-        getSupportingData();
+    })
+}
+
+function searchResultClickListener() {
+    $('#searchResults').on('click', '#resultItem', function() {
+        $('searchResultsContainer').addClass('hidden');
+
+
     })
 }
 
