@@ -18,12 +18,17 @@ function displayNBAPlayerSearchResults(players) {
     for(let i = 0; i < players.length; i++){
         const firstName = players[i].firstName;
         const lastName = players[i].lastName;
-        const teamId = players[i].teamId;
+        let teamId = players[i].teamId;
+        debugger;
         let pos = players[i].leagues.standard.pos;
         let jersey = players[i].leagues.standard.jersey;
 
+        if(teamId === null){
+            teamId = 'FA'
+        }
+
         if(pos === ''){
-            pos = 'FA';
+            pos = 'Unknown';
         } 
 
         if(jersey === '') {
