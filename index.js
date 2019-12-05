@@ -19,9 +19,16 @@ function displayNBAPlayerSearchResults(players) {
         const firstName = players[i].firstName;
         const lastName = players[i].lastName;
         let teamId = players[i].teamId;
+        let pos;
+        let jersey;
         debugger;
-        let pos = players[i].leagues.standard.pos;
-        let jersey = players[i].leagues.standard.jersey;
+
+        if(players[i].leagues.standard === undefined){
+            continue;
+        } else {
+            pos = players[i].leagues.standard.pos;
+            jersey = players[i].leagues.standard.jersey;
+        }
 
         if(teamId === null){
             teamId = 'FA'
@@ -434,6 +441,7 @@ function listeners() {
     watchTeamForm();
     watchConferenceForm();
     searchTypeController();
+    searchResultClickListener();
 }
 
 $(listeners);
