@@ -127,61 +127,74 @@ function displayProfileData(userSelection) {
 
 }
 
-function getNBAPlayer(player) {
-    
-    const fetchNBAPlayer = async () => {
-        try {
-            const nbaPlayerRes = await fetch(`https://api-nba-v1.p.rapidapi.com/players/lastName/${player}`, {
-                "method": "GET",
-                "headers": {
-                    "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
-                    "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
-                }
-            })
-            const nbaPlayerData = await nbaPlayerRes.json();
-            const nbaPlayers = nbaPlayerData.api.players;
-
-            if(nbaPlayers.length === 0){
-                throw new Error(`There are no players in the NBA with the lastname "${player}"; please try again`);
-            } else {
-                displayNBAPlayerSearchResults(nbaPlayers)
-                currentSearchItems = nbaPlayers;
-                console.log(nbaPlayers);
+const getNBAPlayer = async (player) => {
+    try {
+        const nbaPlayerRes = await fetch(`https://api-nba-v1.p.rapidapi.com/players/lastName/${player}`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
             }
-        } catch(e) {
-            console.log(e);
-        }
-    }
+        })
+        const nbaPlayerData = await nbaPlayerRes.json();
+        const nbaPlayers = nbaPlayerData.api.players;
 
-    fetchNBAPlayer();
+        if(nbaPlayers.length === 0){
+            throw new Error(`There are no players in the NBA with the lastname "${player}"; please try again`);
+        } else {
+            const playersWithTeam = await getNBAPlayerTeamName(nbaPlayers);
+
+            displayNBAPlayerSearchResults(playersWithTeam)
+            currentSearchItems = nbaPlayers;
+            console.log(nbaPlayers);
+        }
+    } catch(e) {
+        console.log(e);
+    }
 }
 
-function getNBAPlayerTeamName(teamID) {
+const getNBAPlayerTeamName = async (players) => { 
+    try {
+        const playersWithTeamName = await Promise.all(
+            players.map(async (player) => {
+                if (player.teamId !== null) {
+                    try {
+                        const nbaPlayerTeamRes = await fetch(`https://api-nba-v1.p.rapidapi.com/teams/teamId/${player.teamId}`, {
+                            "method": "GET",
+                            "headers": {
+                                "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                                "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
+                            }
+                        })
     
-    const fetchNBAPlayerTeamName = async () => {
-        try {
-            const nbaPlayerTeamRes = await fetch(`https://api-nba-v1.p.rapidapi.com/teams/teamId/${teamID}`, {
-                "method": "GET",
-                "headers": {
-                    "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
-                    "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
+                        const nbaPlayerTeamData = await nbaPlayerTeamRes.json();
+
+                        const nbaPlayerTeam = nbaPlayerTeamData.api.teams;
+    
+                        if(nbaPlayerTeam.length === 0){
+                            throw new Error(`Error pulling team data`);
+                        } else {
+                            return {
+                                ...player,
+                                team: nbaPlayerTeam[0],
+                            };
+                        }
+                    } catch(error) {
+                        debugger
+                    }
                 }
-            })
-            const nbaPlayerTeamData = await nbaPlayerTeamRes.json();
-            const nbaPlayerTeam = nbaPlayerTeamData.api.teams;
 
-            if(nbaPlayerTeam.length === 0){
+                return {
+                    ...player,
+                    team: { teamName: '' },
+                }
+            }),
+        )
 
-                throw new Error(`Error pulling team data`);
-            } else {
-                return(nbaPlayerTeam[0].fullName);
-            }
-        } catch(e) {
-            console.log(e);
-        }
+        return playersWithTeamName;
+    } catch(e) {
+        console.log(e);
     }
-
-    fetchNBAPlayerTeamName();
 }
 
 function getNBATeam(team) {
