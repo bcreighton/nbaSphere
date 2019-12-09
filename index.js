@@ -101,6 +101,44 @@ function updateConference(conference) {
     }
 }
 
+function convertHeight(height){
+    if(height === 0) {
+        return height;
+    } else {
+        let feet;
+        let inches;
+
+        inches = height * 39.370;
+        feet = Math.abs(0.083333 * inches);
+        inches = Math.round(12 * (feet % 1));
+        feet = Math.floor(feet);
+        height = `${feet}ft ${inches}in`;
+        return height;
+    }
+}
+
+function convertWeight(weight){
+    if(weight === 0){
+        return weight;
+    } else {
+        weight = Math.round(weight * 2.20462);
+        return weight;
+    }
+}
+
+function convertBirthDate(birthDate){
+    if(birthDate === '' || birthDate === null){
+        return birthDate = 'Unknown';
+    } else {
+        const y = birthDate.slice(0,4);
+        const m = birthDate.slice(5,7);
+        const d = birthDate.slice(8);
+        debugger
+
+        return birthDate = `${m}/${d}/${y}`;
+    }
+}
+
 function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     $('#searchResults').empty();
 
@@ -134,9 +172,11 @@ function displayPlayerProfile(userSelection) {
     const pPos = currentItem.leagues.standard.pos;
     const pFirstName = currentItem.firstName;
     const pLastName = currentItem.lastName;
-    const pBirth = currentItem.dateOfBirth;
-    const pHeight = currentItem.heightInMeters;
-    const pWeight = currentItem.weightInKilograms;
+    const pBirth = convertBirthDate(currentItem.dateOfBirth);
+    const pHeightM = currentItem.heightInMeters;
+    const pHeight = convertHeight(pHeightM);
+    const pWeightK = currentItem.weightInKilograms;
+    const pWeight = convertWeight(pWeightK);
     const pCollege = currentItem.collegeName;
     const pDebut = currentItem.startNba;
     const pYears = currentItem.yearsPro;
@@ -157,14 +197,14 @@ function displayPlayerProfile(userSelection) {
     
     $('#profile').html(
         `
-        <img src=${tLogo} alt='${tName} Logo'>
-        <h3 class = 'numPos'>${pNum} | ${pPos}</h3>
+        <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
+        <h3 class = 'numPos'>#${pNum} | ${pPos}</h3>
         <h2 class = 'firstName'>${pFirstName}</h2>
         <h1 class = 'lastName'>${pLastName}</h1>
 
         <p class = 'vital'><span class='vitalTitle'>Birth Date: </span>${pBirth}</p>
-        <p class = 'vital'><span class='vitalTitle'>Height: </span>${pHeight}</p>
-        <p class = 'vital'><span class='vitalTitle'>Weight: </span>${pWeight}</p>
+        <p class = 'vital'><span class='vitalTitle'>Height: </span>${pHeight} / ${pHeightM}m</p>
+        <p class = 'vital'><span class='vitalTitle'>Weight: </span>${pWeight}lbs / ${pWeightK}kg</p>
         <p class = 'vital'><span class='vitalTitle'>College: </span>${pCollege}</p>
         <p class = 'vital'><span class='vitalTitle'>NBA Debut: </span>${pDebut}</p>
         <p class = 'vital'><span class='vitalTitle'>Years Pro: </span>${pYears}</p>
