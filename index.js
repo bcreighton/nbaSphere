@@ -167,8 +167,8 @@ function displayPlayerProfile(userSelection) {
     const playerId = $(userSelection).find('.id').text();
     const currentItem = findNBAObject(playerId, currentSearchItems);
 
-    const pNum = currentItem.leagues.standard.jersey;
-    const pPos = currentItem.leagues.standard.pos;
+    let pNum = currentItem.leagues.standard.jersey;
+    let pPos = currentItem.leagues.standard.pos;
     const pFirstName = currentItem.firstName;
     const pLastName = currentItem.lastName;
     const pBirth = convertBirthDate(currentItem.dateOfBirth);
@@ -179,7 +179,7 @@ function displayPlayerProfile(userSelection) {
     const pCollege = currentItem.collegeName;
     const pDebut = currentItem.startNba;
     const pYears = currentItem.yearsPro;
-    const tName = currentItem.team.fullName;
+    let tName = currentItem.team.fullName;
     const tLogo = currentItem.team.logo;
 
     if(tName === null) {
