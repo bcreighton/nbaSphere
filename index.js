@@ -133,7 +133,6 @@ function convertBirthDate(birthDate){
         const y = birthDate.slice(0,4);
         const m = birthDate.slice(5,7);
         const d = birthDate.slice(8);
-        debugger
 
         return birthDate = `${m}/${d}/${y}`;
     }
@@ -197,10 +196,11 @@ function displayPlayerProfile(userSelection) {
     
     $('#profile').html(
         `
+        <h2 class="sectionTitle">Information</h2>
         <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
         <h3 class = 'numPos'>#${pNum} | ${pPos}</h3>
         <h2 class = 'firstName'>${pFirstName}</h2>
-        <h1 class = 'lastName'>${pLastName}</h1>
+        <h2 class = 'lastName'>${pLastName}</h1>
 
         <p class = 'vital'><span class='vitalTitle'>Birth Date: </span>${pBirth}</p>
         <p class = 'vital'><span class='vitalTitle'>Height: </span>${pHeight} / ${pHeightM}m</p>
@@ -210,6 +210,8 @@ function displayPlayerProfile(userSelection) {
         <p class = 'vital'><span class='vitalTitle'>Years Pro: </span>${pYears}</p>
         `
     )
+
+    getNBAVideos(pFirstName, pLastName);
 
     $('#userSelectionContainer').removeClass('hidden');
     console.log(currentItem);
@@ -279,17 +281,51 @@ const getNBAPlayerTeamName = async (players) => {
                     } catch(error) {
                         console.log(error);
                     }
-                }
-
-                return {
-                    ...player,
-                    team: { teamName: '' },
+                } else {
+                    return {
+                        ...player,
+                        team: { teamName: '' },
+                    }
                 }
             }),
         )
         return playersWithTeamName;
     } catch(e) {
         console.log(e);
+    }
+}
+
+const displayRecentVideos = (videos) => {
+    console.log(videos);
+
+    $('#highlights').empty();
+
+    if(videos.items.length !== 0){
+        debugger
+        $('#highlights').html(
+            `<h2 class='sectionTitle'>Recent Videos</h2>`
+        )
+        for(let i = 0; i < videos.items.length; i++){
+            const vThumb = videos.items[i].snippet.thumbnails.high.url;
+            const vTitle = videos.items[i].snippet.title;
+            const vChannel = videos.items[i].snippet.channelTitle;
+
+            $('#highlights').append(
+                `
+                <div class='video'>
+                    <img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                    <h2 class='thumbTitle'>${vTitle}</h2>
+                    <p class='vChannel'>${vChannel}</p>
+                </div>
+                `
+            )
+        }
+    } else {
+        $('#highlights').html(
+            `
+            <h2 class='noVideos'>There are no videos to display</h2>
+            `
+        )
     }
 }
 
@@ -378,25 +414,23 @@ function getNBANews(nbaItem) {
     fetchNBANews();
 }
 
-function getNBAVideos(nbaItem) {
-    const fetchNBAVideos = async () => {
-        try {
-            const nbaVideosRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=James%20Harden&safeSearch=strict&key=${youtubeAPIKey}`)
+const getNBAVideos = async (...nbaItem) => {
+    try {
+        const nbaVideosRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${nbaItem[0]}%20${nbaItem[1]}&safeSearch=strict&key=${youtubeAPIKey}`);
 
-            const nbaVideos = await nbaVideosRes.json();
+        const nbaVideos = await nbaVideosRes.json();
 
-            if(!nbaVideosRes.ok){
-                throw new Error(nbaVideos.error.message);
-            }
-            
-            console.log(nbaVideos);
-
-        } catch(e) {
-            console.log(e);
+        if(!nbaVideosRes.ok){
+            throw new Error(nbaVideos.error.message);
         }
-    }
 
-    fetchNBAVideos();
+        debugger
+        displayRecentVideos(nbaVideos);
+        return nbaVideos;
+
+    } catch(e) {
+        console.log(e);
+    }
 }
 
 function getNBASocialFB(nbaItem) {
