@@ -17,10 +17,12 @@ function displayNBAPlayerSearchResults(players) {
     $('#searchResults').empty();
 
     for(let i = 0; i < players.length; i++){
+        const searchId = i;
         const playerId = players[i].playerId;
         const firstName = players[i].firstName;
         const lastName = players[i].lastName;
         let teamId = players[i].teamId;
+        let team = players[i].team.fullName;
         let pos;
         let jersey;
 
@@ -32,7 +34,7 @@ function displayNBAPlayerSearchResults(players) {
         }
 
         if(teamId === null){
-            teamId = 'FA'
+            team = 'Free Agent';
         }
 
         if(pos === ''){
@@ -46,9 +48,10 @@ function displayNBAPlayerSearchResults(players) {
 
         $('#searchResults').append(
             `<li class='resultItem'>
+                <p class='searchId hidden'>${searchId}</p>
                 <p class='id hidden'>${playerId}</p>
                 <h3 class='playerName searchItemTitle'>${firstName} ${lastName}</h3>
-                <p class='team seachSubItem'>${teamId}</p>
+                <p class='team seachSubItem'>${team}</p>
                 <p class='position seachSubItem'>Position: ${pos}</p>
                 <p class='jerseyNumber seachSubItem'>#${jersey}</p>
             </li>`
@@ -123,8 +126,63 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     $('#searchResultsContainer').removeClass('hidden');
 }
 
-function displayProfileData(userSelection) {
+function displayPlayerProfile(userSelection) {
+    const playerId = $(userSelection).find('.id').text();
+    const currentItem = findNBAObject(playerId, currentSearchItems);
 
+    const pNum = currentItem.leagues.standard.jersey;
+    const pPos = currentItem.leagues.standard.pos;
+    const pFirstName = currentItem.firstName;
+    const pLastName = currentItem.lastName;
+    const pBirth = currentItem.dateOfBirth;
+    const pHeight = currentItem.heightInMeters;
+    const pWeight = currentItem.weightInKilograms;
+    const pCollege = currentItem.collegeName;
+    const pDebut = currentItem.startNba;
+    const pYears = currentItem.yearsPro;
+    const tName = currentItem.team.fullName;
+    const tLogo = currentItem.team.logo;
+
+    if(tName === null) {
+        tName = 'Free Agent'
+    }
+
+    if(pPos === '') {
+        pPos = 'Unknown';
+    }
+
+    if(pNum === '') {
+        pNum = 'N/A';
+    }
+    
+    $('#profile').html(
+        `
+        <img src=${tLogo} alt='${tName} Logo'>
+        <h3 class = 'numPos'>${pNum} | ${pPos}</h3>
+        <h2 class = 'firstName'>${pFirstName}</h2>
+        <h1 class = 'lastName'>${pLastName}</h1>
+
+        <p class = 'vital'><span class='vitalTitle'>Birth Date: </span>${pBirth}</p>
+        <p class = 'vital'><span class='vitalTitle'>Height: </span>${pHeight}</p>
+        <p class = 'vital'><span class='vitalTitle'>Weight: </span>${pWeight}</p>
+        <p class = 'vital'><span class='vitalTitle'>College: </span>${pCollege}</p>
+        <p class = 'vital'><span class='vitalTitle'>NBA Debut: </span>${pDebut}</p>
+        <p class = 'vital'><span class='vitalTitle'>Years Pro: </span>${pYears}</p>
+        `
+    )
+
+    $('#userSelectionContainer').removeClass('hidden');
+    console.log(currentItem);
+   
+
+}
+
+function findNBAObject(value, currentSearchItems){
+    for(let i = 0; i < currentSearchItems.length; i++) {
+        if(currentSearchItems[i].playerId === value) {
+            return currentSearchItems[i];
+        }
+    }
 }
 
 const getNBAPlayer = async (player) => {
@@ -145,8 +203,7 @@ const getNBAPlayer = async (player) => {
             const playersWithTeam = await getNBAPlayerTeamName(nbaPlayers);
 
             displayNBAPlayerSearchResults(playersWithTeam)
-            currentSearchItems = nbaPlayers;
-            console.log(nbaPlayers);
+            currentSearchItems = playersWithTeam;
         }
     } catch(e) {
         console.log(e);
@@ -180,7 +237,7 @@ const getNBAPlayerTeamName = async (players) => {
                             };
                         }
                     } catch(error) {
-                        debugger
+                        console.log(error);
                     }
                 }
 
@@ -190,7 +247,6 @@ const getNBAPlayerTeamName = async (players) => {
                 }
             }),
         )
-
         return playersWithTeamName;
     } catch(e) {
         console.log(e);
@@ -478,9 +534,9 @@ function searchResultClickListener() {
     $('#searchResults').on('click', '.resultItem', function() {
         $('#searchResultsContainer').addClass('hidden');
 
-        $(`#userSelectionContainer`).removeClass('hidden');
+        $(this).addClass('selected');
 
-        $(`#profile`).html(`<h1>new player data</h1>`);
+        displayPlayerProfile(this);
 
     })
 }
