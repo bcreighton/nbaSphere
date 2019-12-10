@@ -297,6 +297,7 @@ const getNBAPlayerTeamName = async (players) => {
 
 const displayRecentVideos = (videos) => {
     console.log(videos);
+    const youTubeVideoLink = `https://www.youtube.com/watch?v=`;
 
     $('#highlights').empty();
 
@@ -306,6 +307,7 @@ const displayRecentVideos = (videos) => {
             `<h2 class='sectionTitle'>Recent Videos</h2>`
         )
         for(let i = 0; i < videos.items.length; i++){
+            const vId = videos.items[i].id.videoId;
             const vThumb = videos.items[i].snippet.thumbnails.high.url;
             const vTitle = videos.items[i].snippet.title;
             const vChannel = videos.items[i].snippet.channelTitle;
@@ -313,7 +315,7 @@ const displayRecentVideos = (videos) => {
             $('#highlights').append(
                 `
                 <div class='video'>
-                    <img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                    <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'></a>
                     <h2 class='thumbTitle'>${vTitle}</h2>
                     <p class='vChannel'>${vChannel}</p>
                 </div>
@@ -424,7 +426,6 @@ const getNBAVideos = async (...nbaItem) => {
             throw new Error(nbaVideos.error.message);
         }
 
-        debugger
         displayRecentVideos(nbaVideos);
         return nbaVideos;
 
