@@ -163,7 +163,7 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     $('#searchResultsContainer').removeClass('hidden');
 }
 
-function displayPlayerProfile(userSelection) {
+function displayPlayer(userSelection) {
     const playerId = $(userSelection).find('.id').text();
     const currentItem = findNBAObject(playerId, currentSearchItems);
 
@@ -212,6 +212,7 @@ function displayPlayerProfile(userSelection) {
     )
 
     getNBAVideos(pFirstName, pLastName);
+    getNBANews(pFirstName, pLastName);
 
     $('#userSelectionContainer').removeClass('hidden');
     console.log(currentItem);
@@ -302,7 +303,6 @@ const displayRecentVideos = (videos) => {
     $('#highlights').empty();
 
     if(videos.items.length !== 0){
-        debugger
         $('#highlights').html(
             `<h2 class='sectionTitle'>Recent Videos</h2>`
         )
@@ -325,7 +325,43 @@ const displayRecentVideos = (videos) => {
     } else {
         $('#highlights').html(
             `
-            <h2 class='noVideos'>There are no videos to display</h2>
+            <h2 class='noData'>There are no videos to display</h2>
+            `
+        )
+    }
+}
+
+const displayRecentNews = (articles) => {
+    console.log(articles);
+
+    $('#news').empty();
+
+    if(articles.length !== 0){
+        for(let i = 0; i < articles.length; i++){
+            const aImg = articles[i].urlToImage;
+            const aTitle = articles[i].title;
+            const aSource = articles[i].source.name;
+            const aDesc = articles[i].description;
+            const aAuthor = articles[i].author;
+            const aUrl = articles[i].url;
+            const aDate = articles[i].publishedAt;
+
+            $('#news').append(
+                `
+                <div class='article'>
+                    <a href='${aUrl}' target='_blank'><img src='${aImg} alt='${aTitle} article thumbnail'></a>
+                    <h2 class='newsTitle'>${aTitle}</h2>
+                    <p class='newsDesc'>${aDesc}</p>
+                    <p class='newsSource'>${aSource} | ${aAuthor}</p>
+                    <p class='newsPubDate>${aDate}</p>
+                </div>
+                `
+            )
+        }
+    } else {
+        $('#news').html(
+            `
+            <h2 class='noData'>There are no articles to display</h2>
             `
         )
     }
@@ -391,29 +427,27 @@ function getNBAConference(conference) {
     fetchNBAConference();
 }
 
-function getNBANews(nbaItem) {
-    const fetchNBANews = async () => {
-        try {
-            const nbaNewsRes = await fetch(`https://newsapi.org/v2/everything?q=james-harden`, {
-                "method": "GET",
-                "headers": {
-                    "X-Api-Key": "bbbae998198647ef8f363a9b624282de"
-                }
-            })
-            const nbaNews = await nbaNewsRes.json();
 
-            if(nbaNews.status === 'error'){
-                throw new Error(nbaNews.message);
+const getNBANews = async (...nbaItem) => {
+    try {
+        const nbaNewsRes = await fetch(`https://newsapi.org/v2/everything?q=${nbaItem[0]}-${nbaItem[1]}`, {
+            "method": "GET",
+            "headers": {
+                "X-Api-Key": "bbbae998198647ef8f363a9b624282de"
             }
-            
-            console.log(nbaNews);
+        })
+        const nbaNews = await nbaNewsRes.json();
 
-        } catch(e) {
-            console.log(e);
+        if(nbaNews.status === 'error'){
+            throw new Error(nbaNews.message);
         }
-    }
+        
+        const articles = nbaNews.articles.slice(0,5);
+        displayRecentNews(articles);
 
-    fetchNBANews();
+    } catch(e) {
+        console.log(e);
+    }
 }
 
 const getNBAVideos = async (...nbaItem) => {
@@ -611,7 +645,7 @@ function searchResultClickListener() {
         $(this).addClass('selected');
 
         if($(this).hasClass('player')){
-            displayPlayerProfile(this);
+            displayPlayer(this);
         }
     })
 }
