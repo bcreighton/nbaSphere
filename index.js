@@ -1,6 +1,7 @@
 'use strict'
 
 const youtubeAPIKey = 'AIzaSyBOeJM_9wrehRc1wH9v-gJE-RFsmjbuwps';
+const socialAPIKey = '626e71bd528d38b317758d064c6441c7';
 let currentSearchItems;
 
 function convertConferenceNames(conference) {
@@ -433,7 +434,6 @@ function getNBAConference(conference) {
     fetchNBAConference();
 }
 
-
 const getNBANews = async (...nbaItem) => {
     try {
         const nbaNewsRes = await fetch(`https://newsapi.org/v2/everything?q=${nbaItem[0]}-${nbaItem[1]}&sortBy=latest`, {
@@ -474,85 +474,81 @@ const getNBAVideos = async (...nbaItem) => {
     }
 }
 
-function getNBASocialFB(nbaItem) {
-    const fetchNBASocialFB = async () => {
-        try {
-            const nbaSocialFBRes = await fetch(`https://api.social-searcher.com/v2/search?q=james%20harden&network=facebook&limit=5&lang=en&key=626e71bd528d38b317758d064c6441c7`, {
-                "method": "GET",
-                "headers": {
-                    'Accept':'application/json'
-                }
-            })
-            const nbaSocialFB = await nbaSocialFBRes.json();
-
-            if(!nbaSocialFBRes.ok){
-                throw new Error(nbaSocialFB.meta.message);
+const getSocialFB = async (...nbaItem) => {
+    try {
+        const nbaSocialFBRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=facebook&limit=5&lang=en&key=${socialAPIKey}`, {
+            "method": "GET",
+            "headers": {
+                'Accept':'application/json'
             }
-            
-            console.log(nbaSocialFB);
+        })
+        const nbaSocialFB = await nbaSocialFBRes.json();
 
-        } catch(e) {
-            console.log(e);
+        if(!nbaSocialFBRes.ok){
+            throw new Error(nbaSocialFB.meta.message);
         }
-    }
+        
+        return {
+            facebook: nbaSocialFB.posts,
+        };
 
-    fetchNBASocialFB();
+    } catch(e) {
+        console.log(e);
+    }
 }
 
-function getNBASocialTW(nbaItem) {
-    const fetchNBASocialTW = async () => {
-        try {
-            const nbaSocialTWRes = await fetch(`https://api.social-searcher.com/v2/search?q=james%20harden&network=twitter&limit=5&lang=en&key=626e71bd528d38b317758d064c6441c7`, {
-                "method": "GET",
-                "headers": {
-                    'Accept':'application/json'
-                }
-            })
-            const nbaSocialTW = await nbaSocialTWRes.json();
-
-            if(!nbaSocialTWRes.ok){
-                throw new Error(nbaSocialTW.meta.message);
+const getSocialTW = async (...nbaItem) => {
+    try {
+        const nbaSocialTWRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=twitter&limit=5&lang=en&key=${socialAPIKey}`, {
+            "method": "GET",
+            "headers": {
+                'Accept':'application/json'
             }
-            
-            console.log(nbaSocialTW);
+        })
+        const nbaSocialTW = await nbaSocialTWRes.json();
 
-        } catch(e) {
-            console.log(e);
+        if(!nbaSocialTWRes.ok){
+            throw new Error(nbaSocialTW.meta.message);
         }
-    }
+        
+        return {
+            twitter: nbaSocialTW.posts,
+        };
 
-    fetchNBASocialTW();
+    } catch(e) {
+        console.log(e);
+    }
 }
 
-function getNBASocialInsta(nbaItem) {
-    const fetchNBASocialInsta = async () => {
-        try {
-            const nbaSocialInstaRes = await fetch(`https://api.social-searcher.com/v2/search?q=james%20harden&network=instagram&limit=5&lang=en&key=626e71bd528d38b317758d064c6441c7`, {
-                "method": "GET",
-                "headers": {
-                    'Accept':'application/json'
-                }
-            })
-            const nbaSocialInsta = await nbaSocialInstaRes.json();
-
-            if(!nbaSocialInstaRes.ok){
-                throw new Error(nbaSocialInsta.meta.message);
+const getSocialInsta = async (...nbaItem) => {
+    try {
+        const nbaSocialInstaRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=instagram&limit=5&lang=en&key=${socialAPIKey}`, {
+            "method": "GET",
+            "headers": {
+                'Accept':'application/json'
             }
-            
-            console.log(nbaSocialInsta);
+        })
+        const nbaSocialInsta = await nbaSocialInstaRes.json();
+        const instaPosts = nbaSocialInsta.posts;
 
-        } catch(e) {
-            console.log(e);
+        if(!nbaSocialInstaRes.ok){
+            throw new Error(nbaSocialInsta.meta.message);
         }
-    }
+        return instaPosts;
 
-    fetchNBASocialInsta();
+    } catch(e) {
+        console.log(e);
+    }
 }
 
-function getNBASocial(nbaSearchItem) {
-    getNBASocialFB(nbaSearchItem);
-    getNBASocialTW(nbaSearchItem);
-    getNBASocialInsta(nbaSearchItem);
+const getSocial = (...nbaItem) => {
+    let socialPosts = getSocialInsta(nbaItem);
+    socialPosts = {
+        ...socialPosts,
+        getSocialTW(nbaItem)
+    }
+    debugger
+    return socialPosts;
 }
 
 function getSupportingData() {
