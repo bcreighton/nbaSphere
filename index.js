@@ -5,7 +5,7 @@ let currentSearchItems;
 
 function convertConferenceNames(conference) {
     if(conference === 'West') {
-        conference = 'Western';
+        conference = 'Western'; 
     } else if(conference === 'East') {
         conference = 'Eastern';
     }
@@ -47,7 +47,7 @@ function displayNBAPlayerSearchResults(players) {
 
 
         $('#searchResults').append(
-            `<li class='resultItem'>
+            `<li class='resultItem player'>
                 <p class='searchId hidden'>${searchId}</p>
                 <p class='id hidden'>${playerId}</p>
                 <h3 class='playerName searchItemTitle'>${firstName} ${lastName}</h3>
@@ -608,11 +608,11 @@ function watchConferenceForm() {
 function searchResultClickListener() {
     $('#searchResults').on('click', '.resultItem', function() {
         $('#searchResultsContainer').addClass('hidden');
-
         $(this).addClass('selected');
 
-        displayPlayerProfile(this);
-
+        if($(this).hasClass('player')){
+            displayPlayerProfile(this);
+        }
     })
 }
 
