@@ -541,14 +541,21 @@ const getSocialInsta = async (...nbaItem) => {
     }
 }
 
-const getSocial = (...nbaItem) => {
-    let socialPosts = getSocialInsta(nbaItem);
-    socialPosts = {
-        ...socialPosts,
-        getSocialTW(nbaItem)
+const socialPosts = async(...nbaItem) => {
+    try {
+        let instaPosts = await getSocialInsta(nbaItem);
+        let fbPosts = await getSocialFB(nbaItem);
+        let twPosts = await getSocialTW(nbaItem);
+        debugger
+        
+        return {
+            ...instaPosts,
+            ...fbPosts,
+            ...twPosts
+        }
+    } catch(e){
+        console.log(e);
     }
-    debugger
-    return socialPosts;
 }
 
 function getSupportingData() {
