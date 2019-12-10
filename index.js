@@ -126,15 +126,15 @@ function convertWeight(weight){
     }
 }
 
-function convertBirthDate(birthDate){
-    if(birthDate === '' || birthDate === null){
-        return birthDate = 'Unknown';
+function convertDate(date){
+    if(date === '' || date === null){
+        return date = 'Unknown';
     } else {
-        const y = birthDate.slice(0,4);
-        const m = birthDate.slice(5,7);
-        const d = birthDate.slice(8);
+        const y = date.slice(0,4);
+        const m = date.slice(5,7);
+        const d = date.slice(8,10);
 
-        return birthDate = `${m}/${d}/${y}`;
+        return date = `${m}/${d}/${y}`;
     }
 }
 
@@ -171,7 +171,7 @@ function displayPlayer(userSelection) {
     let pPos = currentItem.leagues.standard.pos;
     const pFirstName = currentItem.firstName;
     const pLastName = currentItem.lastName;
-    const pBirth = convertBirthDate(currentItem.dateOfBirth);
+    const pBirth = convertDate(currentItem.dateOfBirth);
     const pHeightM = currentItem.heightInMeters;
     const pHeight = convertHeight(pHeightM);
     const pWeightK = currentItem.weightInKilograms;
@@ -342,19 +342,25 @@ const displayRecentNews = (articles) => {
             const aTitle = articles[i].title;
             const aSource = articles[i].source.name;
             const aDesc = articles[i].description;
-            const aAuthor = articles[i].author;
+            let aAuthor = articles[i].author;
             const aUrl = articles[i].url;
-            const aDate = articles[i].publishedAt;
+            const aDate = convertDate(articles[i].publishedAt);
+
+            if(aAuthor === null){
+                aAuthor = 'Author Unknown';
+            }
 
             $('#news').append(
                 `
-                <div class='article'>
-                    <a href='${aUrl}' target='_blank'><img src='${aImg} alt='${aTitle} article thumbnail'></a>
-                    <h2 class='newsTitle'>${aTitle}</h2>
-                    <p class='newsDesc'>${aDesc}</p>
-                    <p class='newsSource'>${aSource} | ${aAuthor}</p>
-                    <p class='newsPubDate>${aDate}</p>
-                </div>
+                <a href='${aUrl}' class='article' target='_blank'>
+                    <div>
+                        <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
+                        <h2 class='newsTitle'>${aTitle}</h2>
+                        <p class='newsDesc'>${aDesc}</p>
+                        <p class='newsSource'>${aSource} | ${aAuthor}</p>
+                        <p class='newsPubDate'>${aDate}</p>
+                    </div>
+                </a>
                 `
             )
         }
@@ -430,7 +436,7 @@ function getNBAConference(conference) {
 
 const getNBANews = async (...nbaItem) => {
     try {
-        const nbaNewsRes = await fetch(`https://newsapi.org/v2/everything?q=${nbaItem[0]}-${nbaItem[1]}`, {
+        const nbaNewsRes = await fetch(`https://newsapi.org/v2/everything?q=${nbaItem[0]}-${nbaItem[1]}&sortBy=latest`, {
             "method": "GET",
             "headers": {
                 "X-Api-Key": "bbbae998198647ef8f363a9b624282de"

@@ -20,3 +20,12 @@
 .vitalTitle {
     font-weight: bold;
 }
+
+.article {
+    text-decoration: none;
+    color: black;
+}
+
+.articleImg {
+    width: 250px;
+}
