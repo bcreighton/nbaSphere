@@ -61,6 +61,42 @@ function displayNBAPlayerSearchResults(players) {
     $('#searchResultsContainer').removeClass('hidden');
 }
 
+function displayNBATeamPlayers(teamPlayers) {
+    $('#connectedItems').empty();
+
+    for(let i = 0; i < teamPlayers.length; i++){
+        const playerId = teamPlayers[i].playerId;
+        const firstName = teamPlayers[i].firstName;
+        const lastName = teamPlayers[i].lastName;
+        let pos;
+        let jersey;
+
+        if(teamPlayers[i].leagues.standard === undefined){
+            continue;
+        } else {
+            pos = teamPlayers[i].leagues.standard.pos;
+            jersey = teamPlayers[i].leagues.standard.jersey;
+        }
+
+        if(pos === ''){
+            pos = 'Unknown';
+        } 
+
+        if(jersey === '') {
+            jersey = 'N/A';
+        }
+
+        $('#connectedItems').append(
+            `<li class='connectedItem player'>
+                <p class='id hidden'>${playerId}</p>
+                <h3 class='playerName searchItemTitle'>${firstName} ${lastName}</h3>
+                <p class='position seachSubItem'>Position: ${pos}</p>
+                <p class='jerseyNumber seachSubItem'>#${jersey}</p>
+            </li>`
+        );
+    }
+}
+
 function displayNBATeamSearchResults(teams) {
     $('#searchResults').empty();
 
@@ -182,6 +218,7 @@ function displayPlayer(userSelection) {
     const pYears = currentItem.yearsPro;
     let tName = currentItem.team.fullName;
     const tLogo = currentItem.team.logo;
+    const teamId = currentItem.teamId;
 
     if(tName === null) {
         tName = 'Free Agent'
@@ -214,6 +251,7 @@ function displayPlayer(userSelection) {
 
     getNBAVideos(pFirstName, pLastName);
     getNBANews(pFirstName, pLastName);
+    getNBATeamPlayers(teamId, playerId);
 
     $('#userSelectionContainer').removeClass('hidden');
     console.log(currentItem);
@@ -248,6 +286,38 @@ const getNBAPlayer = async (player) => {
 
             displayNBAPlayerSearchResults(playersWithTeam)
             currentSearchItems = playersWithTeam;
+        }
+    } catch(e) {
+        console.log(e);
+    }
+}
+
+const getNBATeamPlayers = async (teamId, playerId) => {
+    try {
+        const nbaTeamPlayersRes = await fetch(`https://api-nba-v1.p.rapidapi.com/players/teamId/${teamId}`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
+            }
+        })
+        const nbaTeamPlayersData = await nbaTeamPlayersRes.json();
+        const nbaTeamPlayers = nbaTeamPlayersData.api.players;
+
+        if(nbaTeamPlayers.length === 0){
+            throw new Error(`There are no players for this team; please try again`);
+        } else {
+            const teamPlayers = await getNBAPlayerTeamName(nbaTeamPlayers);
+
+            for(let i = 0; i < teamPlayers.length; i++){
+                if(teamPlayers[i].playerId === playerId){
+                    teamPlayers.splice([i],1);
+                    break;
+                }
+            }
+
+            displayNBATeamPlayers(teamPlayers);
+            currentSearchItems = teamPlayers;
         }
     } catch(e) {
         console.log(e);
@@ -483,14 +553,13 @@ const getSocialFB = async (...nbaItem) => {
             }
         })
         const nbaSocialFB = await nbaSocialFBRes.json();
+        const facebookPosts = nbaSocialFB.posts;
 
         if(!nbaSocialFBRes.ok){
             throw new Error(nbaSocialFB.meta.message);
         }
         
-        return {
-            facebook: nbaSocialFB.posts,
-        };
+        return facebookPosts;
 
     } catch(e) {
         console.log(e);
@@ -506,14 +575,13 @@ const getSocialTW = async (...nbaItem) => {
             }
         })
         const nbaSocialTW = await nbaSocialTWRes.json();
+        const twitterPosts = nbaSocialTW.posts;
 
         if(!nbaSocialTWRes.ok){
             throw new Error(nbaSocialTW.meta.message);
         }
         
-        return {
-            twitter: nbaSocialTW.posts,
-        };
+        return twitterPosts;
 
     } catch(e) {
         console.log(e);
@@ -546,8 +614,7 @@ const socialPosts = async(...nbaItem) => {
         let instaPosts = await getSocialInsta(nbaItem);
         let fbPosts = await getSocialFB(nbaItem);
         let twPosts = await getSocialTW(nbaItem);
-        debugger
-        
+
         return {
             ...instaPosts,
             ...fbPosts,
@@ -601,6 +668,7 @@ function clearData() {
     $(`#highlights`).empty();
     $(`#news`).empty();
     $(`#social`).empty();
+    $(`#connectedItems`).empty();
 }
 
 function watchPlayerForm() {
@@ -659,12 +727,25 @@ function searchResultClickListener() {
     })
 }
 
+const connectedItemCLickListener = () => {
+    $('#connectedItems').on('click', '.connectedItem', function() {
+        clearData();
+        $(this).addClass('selected');
+
+        if($(this).hasClass('player')){
+            displayPlayer(this);
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
+    })
+}
+
 function listeners() {
     watchPlayerForm();
     watchTeamForm();
     watchConferenceForm();
     searchTypeController();
     searchResultClickListener();
+    connectedItemCLickListener();
 }
 
 $(listeners);

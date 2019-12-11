@@ -29,3 +29,13 @@
 .articleImg {
     width: 250px;
 }
+
+.connectedItem {
+    border: 2px black solid;
+    border-radius: 10px;
+    width: 150px;
+    list-style-type: none;
+    padding: 0px 10px;
+    margin: 10px;
+    display: inline-block;
+}
