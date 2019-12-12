@@ -64,6 +64,12 @@ function displayNBAPlayerSearchResults(players) {
 function displayNBATeamPlayers(teamPlayers) {
     $('#connectedItems').empty();
 
+    const team = teamPlayers[0].team.fullName;
+
+    $('#connectedItems').html(
+        `<h2 class='sectionTitle'>Other ${team} Players</h2>`
+    )
+
     for(let i = 0; i < teamPlayers.length; i++){
         const playerId = teamPlayers[i].playerId;
         const firstName = teamPlayers[i].firstName;
@@ -251,6 +257,7 @@ function displayPlayer(userSelection) {
 
     getNBAVideos(pFirstName, pLastName);
     getNBANews(pFirstName, pLastName);
+    getSocialPosts(pFirstName, pLastName);
     getNBATeamPlayers(teamId, playerId);
 
     $('#userSelectionContainer').removeClass('hidden');
@@ -408,6 +415,9 @@ const displayRecentNews = (articles) => {
     $('#news').empty();
 
     if(articles.length !== 0){
+        $('#news').html(
+            `<h2 class='sectionTitle'>Recent News</h2>`
+        )
         for(let i = 0; i < articles.length; i++){
             const aImg = articles[i].urlToImage;
             const aTitle = articles[i].title;
@@ -441,6 +451,52 @@ const displayRecentNews = (articles) => {
             <h2 class='noData'>There are no articles to display</h2>
             `
         )
+    }
+}
+
+const displayRecentSocial = (posts) => {
+    $('#social').empty();
+
+    if(posts !== 0) {
+        $('#social').html(
+            `<h2 class='sectionTitle'>Recent Social Media</h2>`
+        )
+
+        for(let i = 0; i < posts.length; i++) {
+            const postNetwork = posts[i].network;
+            const postImg = posts[i].image;
+            const postContent = posts[i].text;
+            const postUrl = posts[i].url;
+            const postDate = convertDate(posts[i].posted);
+
+            if(postImg === undefined){
+                $('#social').append(
+                    `
+                    <a href=${postUrl} class='post' target='_blank'>
+                        <div>
+                            <p class = 'postContent'>${postContent}</p>
+                            <p class = 'postDate'>${postDate}</p>
+                            <p class = 'network'>${postNetwork}</p>
+                        </div>
+                    </a>
+                    `
+                    )
+            } else {
+                $('#social').append(
+                    `
+                    <a href=${postUrl} class='post' target='_blank'>
+                        <div>
+                            <img src=${postImg} class = 'postImg' alt = '${postNetwork} Post'>
+                            <p class = 'postContent'>${postContent}</p>
+                            <p class = 'postDate'>${postDate}</p>
+                            <p class = 'network'>${postNetwork}</p>
+                        </div>
+                    </a>
+                    `
+                    )
+            }
+
+        }
     }
 }
 
@@ -544,9 +600,9 @@ const getNBAVideos = async (...nbaItem) => {
     }
 }
 
-const getSocialFB = async (...nbaItem) => {
+const getSocialFB = async (nbaItem) => {
     try {
-        const nbaSocialFBRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=facebook&limit=5&lang=en&key=${socialAPIKey}`, {
+        const nbaSocialFBRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=facebook&lang=en&type=video,photo,status&key=${socialAPIKey}`, {
             "method": "GET",
             "headers": {
                 'Accept':'application/json'
@@ -566,9 +622,9 @@ const getSocialFB = async (...nbaItem) => {
     }
 }
 
-const getSocialTW = async (...nbaItem) => {
+const getSocialTW = async (nbaItem) => {
     try {
-        const nbaSocialTWRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=twitter&limit=5&lang=en&key=${socialAPIKey}`, {
+        const nbaSocialTWRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&lang=en&network=twitter&type=video,photo,status&key=${socialAPIKey}`, {
             "method": "GET",
             "headers": {
                 'Accept':'application/json'
@@ -588,9 +644,9 @@ const getSocialTW = async (...nbaItem) => {
     }
 }
 
-const getSocialInsta = async (...nbaItem) => {
+const getSocialInsta = async (nbaItem) => {
     try {
-        const nbaSocialInstaRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=instagram&limit=5&lang=en&key=${socialAPIKey}`, {
+        const nbaSocialInstaRes = await fetch(`https://api.social-searcher.com/v2/search?q=${nbaItem[0]}%20${nbaItem[1]}&network=instagram&lang=en&type=video,photo,status&key=${socialAPIKey}`, {
             "method": "GET",
             "headers": {
                 'Accept':'application/json'
@@ -609,20 +665,43 @@ const getSocialInsta = async (...nbaItem) => {
     }
 }
 
-const socialPosts = async(...nbaItem) => {
+const getSocialPosts = async(...nbaItem) => {
     try {
         let instaPosts = await getSocialInsta(nbaItem);
         let fbPosts = await getSocialFB(nbaItem);
         let twPosts = await getSocialTW(nbaItem);
 
-        return {
+        const posts = [
             ...instaPosts,
             ...fbPosts,
             ...twPosts
+        ];
+
+        for(let i = 0; i < posts.length;){
+            if(posts[i].type === "link" || posts[i].lang !== 'en'){
+                posts.splice([i],1);
+            } else {
+                i++;
+            }
         }
+
+        const randomPosts = shufflePosts(posts);
+        displayRecentSocial(randomPosts);
+
     } catch(e){
         console.log(e);
     }
+} 
+
+const shufflePosts = (posts) => {
+    for (let i = posts.length - 1; i > 0; i--) {
+        let a = Math.floor(Math.random() * (i + 1));
+        [posts[i], posts[a]] = [posts[a], posts[i]];
+    }
+
+    posts = posts.splice(posts.length - 6);
+
+    return posts;
 }
 
 function getSupportingData() {
