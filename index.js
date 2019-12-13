@@ -114,7 +114,7 @@ function displayNBATeamSearchResults(teams) {
         const division = teams[i].leagues.standard.divName;
 
         $('#searchResults').append(
-            `<li class='resultItem'>
+            `<li class='resultItem team'>
                 <p class='id hidden'>${teamId}</p>
                 <img src='${teamLogo}' alt='${teamName} Logo' class='teamLogo'>
                 <h3 class='teamName searchItemTitle'>${teamName}</h3>
@@ -204,6 +204,45 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
         );
     }
     $('#searchResultsContainer').removeClass('hidden');
+}
+
+const displayTeam = (userSelection) => {
+    const teamId = $(userSelection).find('.id').text();
+    let currentItem = {};
+
+    if(userSelection.length > 1) {
+        currentItem = findNBAObject(teamId, currentSearchItems);
+    } else {
+        currentItem = currentSearchItems[0];
+    }
+
+    const tLogo = currentItem.logo;
+    const tCity = currentItem.city;
+    const tName = currentItem.fullName;
+    const tNickname = currentItem.nickname;
+    const tShortName = currentItem.shortName;
+    const tConf = convertConferenceNames(currentItem.leagues.standard.confName);
+    const tDiv = currentItem.leagues.standard.divName;
+
+    $('#profile').html(
+        `
+        <h2 class="sectionTitle">Information</h2>
+        <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
+        <h2 class='teamCity'>${tCity}</h2>
+        <h2 class='teamNickname'>${tNickname}</h2>
+        <p class='teamConference'><span class='vitalTitle'>Conference:</span> ${tConf}</p>
+        <p class='teamDivision'><span class='vitalTitle'>Division:</span> ${tDiv}</p>
+        `
+    )
+
+    getNBAVideos(tCity, tNickname);
+    getNBANews(tCity, tNickname);
+    getSocialPosts(tCity, tNickname);
+    getNBATeamPlayers(teamId);
+
+    $('#userSelectionContainer').removeClass('hidden');
+    console.log(currentItem);
+
 }
 
 function displayPlayer(userSelection) {
@@ -299,9 +338,9 @@ const getNBAPlayer = async (player) => {
     }
 }
 
-const getNBATeamPlayers = async (teamId, playerId) => {
+const getNBATeamPlayers = async (...nbaItem) => {
     try {
-        const nbaTeamPlayersRes = await fetch(`https://api-nba-v1.p.rapidapi.com/players/teamId/${teamId}`, {
+        const nbaTeamPlayersRes = await fetch(`https://api-nba-v1.p.rapidapi.com/players/teamId/${nbaItem[0]}`, {
             "method": "GET",
             "headers": {
                 "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
@@ -316,15 +355,19 @@ const getNBATeamPlayers = async (teamId, playerId) => {
         } else {
             const teamPlayers = await getNBAPlayerTeamName(nbaTeamPlayers);
 
-            for(let i = 0; i < teamPlayers.length; i++){
-                if(teamPlayers[i].playerId === playerId){
-                    teamPlayers.splice([i],1);
-                    break;
+            if(nbaItem.length > 1){
+                for(let i = 0; i < teamPlayers.length; i++){
+                    if(teamPlayers[i].playerId === nbaItem[1]){
+                        teamPlayers.splice([i],1);
+                        break;
+                    }
                 }
             }
 
-            displayNBATeamPlayers(teamPlayers);
-            currentSearchItems = teamPlayers;
+            const newTeamPlayers = Array.from(new Set(teamPlayers));
+
+            displayNBATeamPlayers(newTeamPlayers);
+            currentSearchItems = newTeamPlayers;
         }
     } catch(e) {
         console.log(e);
@@ -685,23 +728,27 @@ const getSocialPosts = async(...nbaItem) => {
             }
         }
 
-        const randomPosts = shufflePosts(posts);
-        displayRecentSocial(randomPosts);
+        let randomPosts = shuffle(posts);
+        const postDiff = randomPosts.length-6;
+        if(postDiff > 0){
+            randomPosts = randomPosts.splice(randomPosts.length - postDiff);
+        }
+        
+        console.log(posts);
+        displayRecentSocial(posts);
 
     } catch(e){
         console.log(e);
     }
 } 
 
-const shufflePosts = (posts) => {
-    for (let i = posts.length - 1; i > 0; i--) {
+const shuffle = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
         let a = Math.floor(Math.random() * (i + 1));
-        [posts[i], posts[a]] = [posts[a], posts[i]];
+        [arr[i], arr[a]] = [arr[a], arr[i]];
     }
 
-    posts = posts.splice(posts.length - 6);
-
-    return posts;
+    return arr;
 }
 
 function getSupportingData() {
@@ -802,6 +849,8 @@ function searchResultClickListener() {
 
         if($(this).hasClass('player')){
             displayPlayer(this);
+        } else if ($(this).hasClass('team')){
+            displayTeam(this);
         }
     })
 }
