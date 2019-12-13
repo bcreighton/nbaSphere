@@ -129,14 +129,14 @@ function displayNBATeamSearchResults(teams) {
 function updateConference(conference) {
     if(conference === 'west') {
         $('#searchResults').append(
-            `<li class='resultItem'>
+            `<li class='resultItem conference'>
                 <h3 class='conferenceName searchItemTitle'>Western Conference</h3>
                 <p>16 Teams</p>
             </li>`
         )
     } else {
         $('#searchResults').append(
-            `<li class='resultItem'>
+            `<li class='resultItem conference'>
                 <h3 class='conferenceName searchItemTitle'>Eastern Conference</h3>
                 <p>16 Teams</p>
             </li>`
@@ -194,9 +194,9 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
         const teamDivision = conferenceTeams[i].leagues.standard.divName;
 
         $('#searchResults').append(
-            `<li class='resultItem'>
-                <p class='id hidden'>${conferenceTeamId};
-                <img src='${conferenceTeamLogo}' alt='${conferenceTeamName} Logo' class='teamLogo'>
+            `<li class='resultItem team'>
+                <p class='id hidden'>${conferenceTeamId}</p>
+                <img src=${conferenceTeamLogo} alt='${conferenceTeamName} Logo' class='teamLogo'>
                 <h3 class='teamName searchItemTitle'>${conferenceTeamName}</h3>
                 <p class='teamConference seachSubItem'>Conference: ${teamConference}</p>
                 <p class='teamDivision seachSubItem'>Division: ${teamDivision}</p>
@@ -204,6 +204,37 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
         );
     }
     $('#searchResultsContainer').removeClass('hidden');
+    console.log(currentSearchItems);
+}
+
+const displayConf = (userSelection) => {
+    if($(userSelection).find('.conferenceName').text() === 'Western Conference'){
+        $('#profile').html(
+            `
+            <h2 class='confName'>Western Conference</h2>
+            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+            `
+        )
+
+        getNBAVideos('nba%20western','conference');
+        getNBANews('nba%20western','conference');
+        getSocialPosts('nba%20western','conference');
+        getDivision('Western');
+    } else{
+        $('#profile').html(
+            `
+            <h2 class='confName'>Eastern Conference</h2>
+            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+            `
+        )
+
+        getNBAVideos('nba%20eastern','conference');
+        getNBANews('nba%20eastern','conference');
+        getSocialPosts('nba%20eastern','conference');
+        getDivision('Eastern');
+    }
+
+    $('#userSelectionContainer').removeClass('hidden');
 }
 
 const displayTeam = (userSelection) => {
@@ -241,8 +272,6 @@ const displayTeam = (userSelection) => {
     getNBATeamPlayers(teamId);
 
     $('#userSelectionContainer').removeClass('hidden');
-    console.log(currentItem);
-
 }
 
 function displayPlayer(userSelection) {
@@ -300,9 +329,6 @@ function displayPlayer(userSelection) {
     getNBATeamPlayers(teamId, playerId);
 
     $('#userSelectionContainer').removeClass('hidden');
-    console.log(currentItem);
-   
-
 }
 
 function findNBAObject(value, currentSearchItems){
@@ -414,6 +440,46 @@ const getNBAPlayerTeamName = async (players) => {
         return playersWithTeamName;
     } catch(e) {
         console.log(e);
+    }
+}
+
+const getDivision = (conference) => {
+    if(conference === 'Western'){
+        $('#connectedItems').html(
+            `
+            <h2 class='divisions'>Divisions</h2>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Northwest</h3>
+                <p>5 Teams</p>
+            </li>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Pacific</h3>
+                <p>5 Teams</p>
+            </li>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Southwest</h3>
+                <p>5 Teams</p>
+            </li>
+            `
+        )
+    } else {
+        $('#connectedItems').html(
+            `
+            <h2 class='divisions'>Divisions</h2>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Atlantic</h3>
+                <p>5 Teams</p>
+            </li>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Central</h3>
+                <p>5 Teams</p>
+            </li>
+            <li class='connectedItem division'>
+                <h3 class='divisionName'>Southeast</h3>
+                <p>5 Teams</p>
+            </li>
+            `
+        )
     }
 }
 
@@ -572,35 +638,55 @@ function getNBATeam(team) {
 
     fetchNBATeam();
 }
-
-function getNBAConference(conference) {
     
-    const fetchNBAConference = async () => {
-        try {
-            const nbaConferenceRes = await fetch(`https://api-nba-v1.p.rapidapi.com/teams/confName/${conference}`, {
-                "method": "GET",
-                "headers": {
-                    "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
-                    "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
-                }
-            })
-            const nbaConferenceData = await nbaConferenceRes.json();
-            const nbaConference = nbaConferenceData.api.teams;
-
-            if(nbaConference.length === 0){
-
-                throw new Error(`There is no conference in the NBA by the name "${conference}"; please try again`);
-            } else {
-                displayNBAConferenceSearchResults(conference, nbaConference);
-                currentSearchItems = nbaConference;
-                console.log(nbaConference);
+const getNBAConference = async (conference) => {
+    try {
+        const nbaConferenceRes = await fetch(`https://api-nba-v1.p.rapidapi.com/teams/confName/${conference}`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
             }
-        } catch(e) {
-            console.log(e);
-        }
-    }
+        })
+        const nbaConferenceData = await nbaConferenceRes.json();
+        const nbaConference = nbaConferenceData.api.teams;
 
-    fetchNBAConference();
+        if(nbaConference.length === 0){
+
+            throw new Error(`There is no conference in the NBA by the name "${conference}"; please try again`);
+        } else {
+            displayNBAConferenceSearchResults(conference, nbaConference);
+            currentSearchItems = nbaConference;
+            console.log(nbaConference);
+        }
+    } catch(e) {
+        console.log(e);
+    }
+}
+
+const getNBADivision = async (division) => {
+    try {
+        const nbaDivisionRes = await fetch(`https://api-nba-v1.p.rapidapi.com/teams/divName/${division}`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-nba-v1.p.rapidapi.com",
+                "x-rapidapi-key": "cfc420df64msha7a3397e1f4de3ep182cedjsnca0bd8135c93"
+            }
+        })
+        const nbaDivisionData = await nbaDivisionRes.json();
+        const nbaDivision = nbaDivisionData.api.teams;
+
+        if(nbaDivision.length === 0){
+
+            throw new Error(`There is no division in the NBA by the name "${division}"; please try again`);
+        } else {
+            displayNBADivision(division, nbaDivision);
+            currentSearchItems = nbaDivision;
+            console.log(nbaDivision);
+        }
+    } catch(e) {
+        console.log(e);
+    }
 }
 
 const getNBANews = async (...nbaItem) => {
@@ -851,6 +937,10 @@ function searchResultClickListener() {
             displayPlayer(this);
         } else if ($(this).hasClass('team')){
             displayTeam(this);
+        } else if($(this).hasClass('conference')){
+            displayConf(this);
+        } else{
+            displayDiv(this);
         }
     })
 }
