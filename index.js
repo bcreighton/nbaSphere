@@ -301,7 +301,7 @@ const displayTeam = (userSelection) => {
 
     $('#profile').html(
         `
-        <h2 class="sectionTitle">Information</h2>
+        <h2 class="sectionTitle">General Information</h2>
         <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
         <h2 class='teamCity'>${tCity}</h2>
         <h2 class='teamNickname'>${tNickname}</h2>
@@ -352,12 +352,16 @@ function displayPlayer(userSelection) {
     
     $('#profile').html(
         `
-        <h2 class="sectionTitle">Information</h2>
+        <h2 class="sectionTitle">General Information</h2>
         <p class='id hidden'>${teamId}</p>
         <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
-        <h3 class = 'numPos'>#${pNum} | ${pPos}</h3>
-        <h2 class = 'firstName'>${pFirstName}</h2>
-        <h2 class = 'lastName'>${pLastName}</h1>
+        <div class='basicDetails'>
+            <h3 class = 'numPos'>#${pNum} | ${pPos}</h3>
+            <div class='name'>
+                <h2 class = 'firstName'>${pFirstName}</h2>
+                <h2 class = 'lastName'>${pLastName}</h1>
+            </div>
+        </div>
 
         <p class = 'vital'><span class='vitalTitle'>Birth Date: </span>${pBirth}</p>
         <p class = 'vital'><span class='vitalTitle'>Height: </span>${pHeight} / ${pHeightM}m</p>
@@ -935,6 +939,8 @@ function watchPlayerForm() {
     $('#nbaPlayerSearch').submit(event => {
         event.preventDefault();
 
+        $('#mainSearch').css('top','15%');
+
         clearData();
         $(`#userSelectionContainer`).addClass('hidden');
 
@@ -948,6 +954,8 @@ function watchTeamForm() {
     $('#nbaTeamSearch').submit(event => {
         event.preventDefault();
 
+        $('#mainSearch').css('top','15%');
+
         clearData();
         $(`#userSelectionContainer`).addClass('hidden');
 
@@ -960,6 +968,8 @@ function watchTeamForm() {
 function watchConferenceForm() {
     $('#nbaConferenceSearch').submit(event => {
         event.preventDefault();
+
+        $('#mainSearch').css('top','15%');
 
         clearData();
         $(`#userSelectionContainer`).addClass('hidden');
