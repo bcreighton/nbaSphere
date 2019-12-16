@@ -328,6 +328,26 @@ p .vChannel {
     margin: 5px 0 15px;
 }
 
+.post {
+    text-decoration: none;
+    color: black;
+}
+
+.post div {
+    margin: 5px;
+    border: 2px lightgray solid;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.postImg {
+    margin: 0 auto;
+    width: 125px;
+    height: 70px;
+    float: left;
+    object-fit: cover;
+}
+
 #connectedItems {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -350,22 +370,6 @@ p .vChannel {
     display: inline-block;
 }
 
-.post {
-    text-decoration: none;
-    color: black;
-}
-
-.post div {
-    margin: 5px;
-    border: 2px lightgray solid;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.postImg {
-    margin: 0 auto;
-    width: 125px;
-    height: 70px;
-    float: left;
-    object-fit: cover;
+.connectedItem:hover {
+    background-color: lightgray;
 }
