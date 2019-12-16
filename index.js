@@ -585,8 +585,16 @@ const truncateContent = (content) => {
     return `${content}...`;
 }
 
-const displayRecentNews = (articles) => {
+const truncateAuthor = (author) => {
+    if(author === null){
+        return author;
+    } else if(author.length > 15 && /\s/.test(author) === false) {
+        author = author.slice(0, 15);
+        return author;
+    }
+}
 
+const displayRecentNews = (articles) => {
     $('#news').empty();
 
     if(articles.length !== 0){
@@ -598,7 +606,7 @@ const displayRecentNews = (articles) => {
             const aTitle = truncateTitle(articles[i].title);
             const aSource = articles[i].source.name;
             const aDesc = truncateContent(articles[i].description);
-            let aAuthor = articles[i].author;
+            let aAuthor = truncateAuthor(articles[i].author);
             const aUrl = articles[i].url;
             const aDate = convertDate(articles[i].publishedAt);
 
@@ -1016,21 +1024,38 @@ function searchResultClickListener() {
 
         if($(this).hasClass('player')){
             const team = $(this).find('.team').text();
+            $('#social').html(
+                `
+                <h2 class='sectionTitle'>Recent Social Media</h2>
+                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
+                `);
+
             $('#connectedItems').html(
                 `
                 <h2 class='sectionTitle'>Other ${team} Players</h2>
-                <h2 class='loading'>${team} players are loading...</h2>
+                <h2 class='loading' style='grid-column: 1/7; grid-row: 3;'>${team} players are loading...</h2>
                 `);
             displayPlayer(this);
         } else if ($(this).hasClass('team')){
             const team = $(this).find('.teamName').text();
+            $('#social').html(
+                `
+                <h2 class='sectionTitle'>Recent Social Media</h2>
+                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
+                `);
+
             $('#connectedItems').html(
                 `
                 <h2 class='sectionTitle'>Players</h2>
-                <h2 class='loading'>${team} players are loading...</h2>
+                <h2 class='loading' style='grid-column: 1/7; grid-row: 3;'>${team} players are loading...</h2>
                 `);
             displayTeam(this);
         } else if ($(this).hasClass('conference')){
+            $('#social').html(
+                `
+                <h2 class='sectionTitle'>Recent Social Media</h2>
+                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
+                `);
             displayConf(this);
         }
     })
