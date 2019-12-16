@@ -261,7 +261,8 @@ const displayConf = (userSelection) => {
         getDivisions('Eastern');
     }
 
-    $('#userSelectionContainer').removeClass('hidden');
+    $('#userSelectionContainer').css('display','grid');
+    // $('#userSelectionContainer').removeClass('hidden');
 }
 
 const displayDivision = (userSelection) => {
@@ -315,7 +316,8 @@ const displayTeam = (userSelection) => {
     getSocialPosts(tCity, tNickname);
     getNBATeamPlayers(teamId);
 
-    $('#userSelectionContainer').removeClass('hidden');
+    $('#userSelectionContainer').css('display','grid');
+    // $('#userSelectionContainer').removeClass('hidden');
 }
 
 function displayPlayer(userSelection) {
@@ -377,7 +379,8 @@ function displayPlayer(userSelection) {
     getSocialPosts(pFirstName, pLastName);
     getNBATeamPlayers(teamId, playerId);
 
-    $('#userSelectionContainer').removeClass('hidden');
+    $('#userSelectionContainer').css('display','grid');
+    // $('#userSelectionContainer').removeClass('hidden');
 }
 
 function findNBAObject(value, currentSearchItems){
@@ -545,7 +548,7 @@ const displayRecentVideos = (videos) => {
         for(let i = 0; i < videos.items.length; i++){
             const vId = videos.items[i].id.videoId;
             const vThumb = videos.items[i].snippet.thumbnails.high.url;
-            const vTitle = videos.items[i].snippet.title;
+            const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
             const vChannel = videos.items[i].snippet.channelTitle;
 
             $('#highlights').append(
@@ -567,6 +570,21 @@ const displayRecentVideos = (videos) => {
     }
 }
 
+const truncateVideoTitle = (videoTitle) => {
+    videoTitle = videoTitle.slice(0, 70);
+    return `${videoTitle}...`;
+}
+
+const truncateTitle = (title) => {
+    title = title.slice(0, 24);
+    return `${title}...`;
+}
+
+const truncateContent = (content) => {
+    content = content.slice(0, 46);
+    return `${content}...`;
+}
+
 const displayRecentNews = (articles) => {
 
     $('#news').empty();
@@ -577,9 +595,9 @@ const displayRecentNews = (articles) => {
         )
         for(let i = 0; i < articles.length; i++){
             const aImg = articles[i].urlToImage;
-            const aTitle = articles[i].title;
+            const aTitle = truncateTitle(articles[i].title);
             const aSource = articles[i].source.name;
-            const aDesc = articles[i].description;
+            const aDesc = truncateContent(articles[i].description);
             let aAuthor = articles[i].author;
             const aUrl = articles[i].url;
             const aDate = convertDate(articles[i].publishedAt);
@@ -591,12 +609,14 @@ const displayRecentNews = (articles) => {
             $('#news').append(
                 `
                 <a href='${aUrl}' class='article' target='_blank'>
-                    <div>
+                    <div class='articleContainer'>
                         <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
-                        <h2 class='newsTitle'>${aTitle}</h2>
-                        <p class='newsDesc'>${aDesc}</p>
-                        <p class='newsSource'>${aSource} | ${aAuthor}</p>
-                        <p class='newsPubDate'>${aDate}</p>
+                        <div class='newsText'>
+                            <h2 class='newsTitle'>${aTitle}</h2>
+                            <p class='newsDesc'>${aDesc}</p>
+                            <p class='newsSource'>${aSource} | ${aAuthor}</p>
+                            <p class='newsPubDate'>${aDate}</p>
+                        </div>
                     </div>
                 </a>
                 `
@@ -612,7 +632,7 @@ const displayRecentNews = (articles) => {
 }
 
 const displayRecentSocial = (posts) => {
-    $('#social').empty();
+    // $('#social').empty();
 
     if(posts !== 0) {
         $('#social').html(
@@ -622,7 +642,7 @@ const displayRecentSocial = (posts) => {
         for(let i = 0; i < posts.length; i++) {
             const postNetwork = posts[i].network;
             const postImg = posts[i].image;
-            const postContent = posts[i].text;
+            const postContent = truncateContent(posts[i].text);
             const postUrl = posts[i].url;
             const postDate = convertDate(posts[i].posted);
 
@@ -942,7 +962,8 @@ function watchPlayerForm() {
         $('#mainSearch').css('top','15%');
 
         clearData();
-        $(`#userSelectionContainer`).addClass('hidden');
+        $(`#userSelectionContainer`).css('display','none');
+        // $(`#userSelectionContainer`).addClass('hidden');
 
         const playerLastName = $('#playerLastName').val();
 
@@ -957,7 +978,8 @@ function watchTeamForm() {
         $('#mainSearch').css('top','15%');
 
         clearData();
-        $(`#userSelectionContainer`).addClass('hidden');
+        $(`#userSelectionContainer`).css('display','none');
+        // $(`#userSelectionContainer`).addClass('hidden');
 
         const teamName = $('#teamName').val();
 
@@ -972,7 +994,8 @@ function watchConferenceForm() {
         $('#mainSearch').css('top','15%');
 
         clearData();
-        $(`#userSelectionContainer`).addClass('hidden');
+        $(`#userSelectionContainer`).css('display','none');
+        // $(`#userSelectionContainer`).addClass('hidden');
 
         let conferenceName = $('#conferenceName').val();
 
@@ -992,8 +1015,20 @@ function searchResultClickListener() {
         $(this).addClass('selected');
 
         if($(this).hasClass('player')){
+            const team = $(this).find('.team').text();
+            $('#connectedItems').html(
+                `
+                <h2 class='sectionTitle'>Other ${team} Players</h2>
+                <h2 class='loading'>${team} players are loading...</h2>
+                `);
             displayPlayer(this);
         } else if ($(this).hasClass('team')){
+            const team = $(this).find('.teamName').text();
+            $('#connectedItems').html(
+                `
+                <h2 class='sectionTitle'>Players</h2>
+                <h2 class='loading'>${team} players are loading...</h2>
+                `);
             displayTeam(this);
         } else if ($(this).hasClass('conference')){
             displayConf(this);
