@@ -1,71 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="" />
     <title>NBA Sphere</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Oswald:300,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,700|Oswald:300,700&display=swap"
+      rel="stylesheet"
+    />
 
-   <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="main.css">
-</head>
-<body>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
     <main>
-        <section id='mainSearch'>
-            <h1>NBA Sphere!</h1>
-            <div id="searchTypeButtonContainer" class="container">
-                <button class="mainButton hidden" id="playerButton">Player</button>
-                <button class="mainButton" id="teamButton">Team</button>
-                <button class="mainButton" id="conferenceButton">Conference</button>
-            </div>
+      <section id="mainSearch">
+        <h1>NBA Sphere!</h1>
+        <div id="searchTypeButtonContainer" class="container">
+          <button class="mainButton hidden" id="playerButton">Player</button>
+          <button class="mainButton" id="teamButton">Team</button>
+          <button class="mainButton" id="conferenceButton">Conference</button>
+        </div>
 
-            <form id="nbaPlayerSearch" class="searchForm">
-                <input type="text" class='searchInput' id="playerLastName" placeholder="PLAYER'S LAST NAME">
-                <button type="submit">Search</button>
-            </form>
-            <form id="nbaTeamSearch" class="searchForm hidden">
-                <input type="text" class='searchInput' id="teamName" placeholder="TEAM NAME">
-                <button type="submit">Search</button>
-            </form>
-            <form id="nbaConferenceSearch" class="searchForm hidden">
-                <input type="text" class='searchInput' id="conferenceName" placeholder="CONFERENCE NAME">
-                <button type="submit">Search</button>
-            </form>
-        </section>
+        <form name="nbaPlayerSearch" id="nbaPlayerSearch" class="searchForm">
+          <input
+            type="text"
+            class="searchInput"
+            id="playerLastName"
+            placeholder="PLAYER'S LAST NAME"
+            title="NBA player's last name"
+          />
+          <button type="submit">Search</button>
+        </form>
+        <form id="nbaTeamSearch" class="searchForm hidden">
+          <input
+            type="text"
+            class="searchInput"
+            id="teamName"
+            placeholder="TEAM NAME"
+            title="Enter a NBA team name i.e: Bulls"
+          />
+          <button type="submit">Search</button>
+        </form>
+        <form id="nbaConferenceSearch" class="searchForm hidden">
+          <input
+            type="text"
+            class="searchInput"
+            id="conferenceName"
+            placeholder="CONFERENCE NAME"
+            title="Enter a NBA conference name"
+          />
+          <button type="submit">Search</button>
+        </form>
+      </section>
 
-        <section id="searchResultsContainer" class='hidden'>
-            <ul id="searchResults">
+      <section id="searchResultsContainer" class="hidden">
+        <ul id="searchResults"></ul>
+      </section>
 
-            </ul>
-        </section>
-
-        <section id="userSelectionContainer" class='hidden'>
-            <div id="profile" class="container">
-            
-            </div>
-            <div id="highlights" class="container">
-
-            </div>
-            <div id="news" class="container">
-
-            </div>
-            <div id="social" class="container">
-                
-            </div>
-            <div id="connectedItems" class="container">
-                
-            </div>
-        </section>
+      <section id="userSelectionContainer" class="hidden">
+        <div id="profile" class="container"></div>
+        <div id="highlights" class="container"></div>
+        <div id="news" class="container"></div>
+        <div id="social" class="container"></div>
+        <div id="connectedItems" class="container"></div>
+      </section>
     </main>
-    
+
     <script
-        src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous">
-    </script>
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
     <script src="index.js"></script>
-</body>
+  </body>
 </html>
