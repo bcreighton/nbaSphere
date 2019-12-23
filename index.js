@@ -586,15 +586,33 @@ const displayRecentVideos = videos => {
       const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
       const vChannel = videos.items[i].snippet.channelTitle;
 
-      $('#highlights').append(
-        `
-                <div class='video'>
-                    <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'></a>
-                    <h2 class='thumbTitle'>${vTitle}</h2>
-                    <p class='vChannel'>${vChannel}</p>
-                </div>
-                `
-      );
+      if (i === 0) {
+        $('#highlights').append(
+          `
+                  <div class='video'>
+                      <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                        <div class='vDetails'>
+                          <h2 class='thumbTitle'>${vTitle}</h2>
+                          <p class='vChannel'>${vChannel}</p>
+                        </div>
+                      </a>
+                  </div>
+                  `
+        );
+      } else {
+        $('#highlights').append(
+          `
+                  <div class='video hover'>
+                      <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                        <div class='vDetails'>
+                          <h2 class='thumbTitle'>${vTitle}</h2>
+                          <p class='vChannel'>${vChannel}</p>
+                        </div>
+                      </a>
+                  </div>
+                  `
+        );
+      }
     }
   } else {
     $('#highlights').html(
@@ -633,7 +651,7 @@ const displayRecentNews = articles => {
   $('#news').empty();
 
   if (articles.length !== 0) {
-    $('#news').html(`<h2 class='sectionTitle'>Recent News</h2>`);
+    $('#news').html(`<h2 class='sectionTitle'>Popular News</h2>`);
     for (let i = 0; i < articles.length; i++) {
       const aImg = articles[i].urlToImage;
       const aTitle = truncateTitle(articles[i].title);
