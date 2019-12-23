@@ -4,6 +4,7 @@
 
 body {
   width: 100vw;
+  background-color: #f3f3f3;
 }
 
 .hidden {
@@ -65,18 +66,21 @@ main {
 }
 
 #mainSearch {
+  padding: 40px;
   margin-right: -50%;
-  width: 50%;
+  width: 100%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+  background-color: #17408b;
 }
 
 #mainSearch h1 {
   margin-bottom: 30px;
   font-size: 60px;
+  color: white;
 }
 
 #searchTypeButtonContainer.container,
@@ -84,26 +88,73 @@ main {
   margin-bottom: 10px;
 }
 
+button {
+  cursor: pointer;
+}
+
 .mainButton {
   margin: 0 10px;
   font-size: 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: #17408b;
 }
 
-.searchInput {
+.mainButton:hover {
+  background-color: #c9082a;
+  color: white;
+}
+
+input.searchInput {
   padding: 5px 20px 2px 10px;
   font-size: 1.25rem;
   font-family: lato;
   border: none;
   border-bottom: 1px solid lightgray;
   width: 250px;
+  background-color: #17408b;
+  color: white;
+}
+
+input.searchInput:focus {
+  color: white;
+  background-color: #17408b;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: none;
+  border-bottom: 1px solid white;
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #17408b inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+textarea,
+select,
+input,
+button {
+  outline: none;
+}
+
+::placeholder {
+  color: white;
 }
 
 button[type='submit'] {
   border: none;
-  border-top: 1px solid lightgray;
-  border-left: 1px solid lightgray;
-  font-size: 1.5rem;
+  background-color: #17408b;
+  font-size: 1.75rem;
   font-family: lato;
+  color: white;
 }
 
 .container {
@@ -113,7 +164,7 @@ button[type='submit'] {
 
 #searchResultsContainer,
 #userSelectionContainer {
-  margin-top: 250px;
+  margin-top: 300px;
 }
 
 #searchResults {
@@ -121,6 +172,16 @@ button[type='submit'] {
   width: 100%;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+#profile,
+#highlights,
+#news,
+#social,
+#connectedItems,
+.resultItem,
+.connectedItem {
+  background-color: white;
 }
 
 .resultItem {
@@ -133,8 +194,22 @@ button[type='submit'] {
   cursor: pointer;
 }
 
-.resultItem:hover {
-  background-color: lightgray;
+.resultItem:hover,
+.connectedItem:hover,
+.article:hover {
+  background-color: #17408b;
+  color: white;
+}
+
+.resultItem p,
+.connectedItem p {
+  margin-top: 5px;
+}
+
+.resultItem.team .teamLogo,
+.connectedItem.team .teamLogo {
+  height: 200px;
+  object-fit: contain;
 }
 
 #userSelectionContainer {
@@ -147,6 +222,7 @@ button[type='submit'] {
 .sectionTitle {
   margin: 15px 0;
   align-self: center;
+  color: #17408b;
 }
 
 #profile {
@@ -165,8 +241,6 @@ button[type='submit'] {
 }
 
 .basicDetails {
-  /* display: flex;
-    justify-content: center; */
   padding-bottom: 15px;
 }
 
@@ -178,7 +252,6 @@ button[type='submit'] {
 .numPos {
   margin-right: 5px;
   font-size: 1.25rem;
-  /* align-self: flex-start; */
 }
 
 .name {
@@ -207,11 +280,6 @@ button[type='submit'] {
 
 .vitalTitle {
   font-weight: bold;
-}
-
-.article:hover,
-.post:hover {
-  background-color: lightgray;
 }
 
 #highlights {
@@ -349,6 +417,7 @@ p .vChannel {
 }
 
 .articleImg {
+  margin-top: 7px;
   width: 175px;
   height: 92px;
   object-fit: cover;
@@ -386,6 +455,40 @@ p .vChannel {
   height: 50px;
 }
 
+.loaderPost {
+  margin-bottom: 5px;
+  width: 100%;
+  padding: 10px;
+}
+
+.loaderImg {
+  margin: 0 auto;
+  margin-right: 20px;
+  width: 125px;
+  height: 70px;
+  float: left;
+  background-color: #f3f3f3;
+}
+
+.loaderText {
+  margin-left: 33%;
+  margin-bottom: 10px;
+  height: 15px;
+  background-color: #f3f3f3;
+}
+
+.loaderText:nth-of-type(1) {
+  width: 60%;
+}
+
+.loaderText:nth-of-type(2) {
+  width: 30%;
+}
+
+.loaderText:nth-of-type(3) {
+  width: 15%;
+}
+
 .post {
   text-decoration: none;
   color: black;
@@ -400,6 +503,11 @@ p .vChannel {
   height: 100%;
 }
 
+.post div:hover {
+  background-color: #17408b;
+  color: white;
+}
+
 .postImg {
   margin: 0 auto;
   width: 125px;
@@ -408,20 +516,63 @@ p .vChannel {
   object-fit: cover;
 }
 
+#loaderGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 175px;
+  justify-content: center;
+  grid-gap: 10px;
+}
+
+.loaderConnectedItem {
+  height: 80px;
+  width: 90%;
+  border-radius: 10px;
+  border: 2px #f3f3f3 solid;
+  margin: 10px;
+  padding: 5px 10px;
+  align-self: center;
+}
+
+.loaderSearchText {
+  margin: 0 auto;
+  margin-bottom: 10px;
+  height: 15px;
+  background-color: #f3f3f3;
+}
+
+.loaderSearchText:nth-of-type(1) {
+  width: 60%;
+}
+
+.loaderSearchText:nth-of-type(2) {
+  width: 35%;
+}
+
+.loaderSearchText:nth-of-type(3) {
+  width: 30%;
+}
+
+.loaderSearchText:nth-of-type(4) {
+  width: 15%;
+}
+
 #connectedItems {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 75px 1fr;
   grid-column: 1/6;
   grid-row: 5/7;
+  border: 2px lightgray solid;
+  border-radius: 15px;
 }
 
 #connectedItems h2.sectionTitle {
-  grid-column: 1;
+  grid-row: 1;
 }
 
 .connectedItem {
-  border: 2px black solid;
+  border: 2px lightgray solid;
   border-radius: 10px;
   width: 30%;
   list-style-type: none;
@@ -435,6 +586,37 @@ p .vChannel {
   justify-content: center;
 }
 
-.connectedItem:hover {
-  background-color: lightgray;
+#connectedItemsFlex .division {
+  height: 100px;
+}
+
+/* Loading Animation */
+
+.load {
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1000px 104px;
+  position: relative;
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.loaderSearch {
+  width: 30%;
+  height: 90px;
+  margin: 15px;
+  padding: 5px 15px;
+  border-radius: 10px;
 }
