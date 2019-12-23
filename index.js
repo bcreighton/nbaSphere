@@ -402,7 +402,6 @@ function displayPlayer(userSelection) {
   getNBATeamPlayers(teamId, playerId);
 
   $('#userSelectionContainer').css('display', 'grid');
-  debugger;
 }
 
 function findNBAObject(value, currentSearchItems) {
@@ -629,7 +628,7 @@ const displayRecentVideos = videos => {
 };
 
 const truncateVideoTitle = videoTitle => {
-  videoTitle = videoTitle.slice(0, 70);
+  videoTitle = videoTitle.slice(0, 60);
   return `${videoTitle}...`;
 };
 
