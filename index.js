@@ -619,24 +619,33 @@ const displayRecentVideos = videos => {
       }
     }
 
+    $('#highlightsMobile').html(
+      `
+      <h2 class='sectionTitle'>Recent Videos</h2>
+      <div id='videoFlex' class='scroll'></div>
+      `
+    );
+
     for (let i = 0; i < videos.items.length; i++) {
       const vId = videos.items[i].id.videoId;
       const vThumb = videos.items[i].snippet.thumbnails.high.url;
       const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
       const vChannel = videos.items[i].snippet.channelTitle;
 
-      $('#highlightsMobile').append(
+      $('#highlightsMobile')
+        .find('#videoFlex')
+        .append(
+          `
+          <div class='videoMobile'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumbMobile'>
+                <div class='vDetailsMobile'>
+                  <h2 class='thumbTitleMobile'>${vTitle}</h2>
+                  <p class='vChannelMobile'>${vChannel}</p>
+                </div>
+              </a>
+          </div>
         `
-        <div class='videoMobile'>
-            <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumbMobile'>
-              <div class='vDetailsMobile'>
-                <h2 class='thumbTitleMobile'>${vTitle}</h2>
-                <p class='vChannelMobile'>${vChannel}</p>
-              </div>
-            </a>
-        </div>
-        `
-      );
+        );
     }
   } else {
     $('#highlights').html(

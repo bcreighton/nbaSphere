@@ -390,7 +390,7 @@ p .vChannel {
   font-size: 0.75rem;
 }
 
-#highlightsMobile {
+#videoFlex {
   display: none;
   overflow: scroll;
   flex: none;
@@ -398,7 +398,7 @@ p .vChannel {
   align-items: center;
 }
 
-#highlightsMobile.scroll {
+#videoFlex.scroll {
   flex-flow: row nowrap;
   scroll-snap-type: x mandatory;
 }
@@ -787,10 +787,22 @@ p .vChannel {
   }
 
   #highlightsMobile {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr;
+    justify-content: center;
   }
 
-  #highlightsMobile a {
+  #highlightsMobile .sectionTitle {
+    grid-row: 1/2;
+  }
+
+  #videoFlex {
+    display: flex;
+    grid-row: 2/3;
+  }
+
+  #videoFlex a {
     text-decoration: none;
   }
 
@@ -802,7 +814,13 @@ p .vChannel {
     color: black;
   }
 
+  .videoThumbMobile {
+    width: auto;
+    height: 32vh;
+  }
+
   .thumbTitleMobile {
+    font-size: 1.5rem;
     margin: 10px 0;
   }
 }
