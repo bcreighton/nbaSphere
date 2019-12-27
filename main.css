@@ -321,8 +321,8 @@ button[type='submit'] {
 }
 
 .video:first-of-type img {
-  width: fit-content;
-  height: fit-content;
+  width: auto;
+  height: 38vh;
 }
 
 .video:first-of-type .thumbTitle,
@@ -377,7 +377,7 @@ button[type='submit'] {
 
 img.videoThumb {
   width: 98%;
-  height: 100%;
+  height: 12vh;
   object-fit: cover;
 }
 
