@@ -618,6 +618,26 @@ const displayRecentVideos = videos => {
         );
       }
     }
+
+    for (let i = 0; i < videos.items.length; i++) {
+      const vId = videos.items[i].id.videoId;
+      const vThumb = videos.items[i].snippet.thumbnails.high.url;
+      const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
+      const vChannel = videos.items[i].snippet.channelTitle;
+
+      $('#highlightsMobile').append(
+        `
+        <div class='videoMobile'>
+            <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumbMobile'>
+              <div class='vDetailsMobile'>
+                <h2 class='thumbTitleMobile'>${vTitle}</h2>
+                <p class='vChannelMobile'>${vChannel}</p>
+              </div>
+            </a>
+        </div>
+        `
+      );
+    }
   } else {
     $('#highlights').html(
       `

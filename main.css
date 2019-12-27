@@ -176,6 +176,7 @@ button[type='submit'] {
 
 #profile,
 #highlights,
+#highlightsMobile,
 #news,
 #social,
 #connectedItems,
@@ -282,13 +283,15 @@ button[type='submit'] {
   font-weight: bold;
 }
 
-#highlights {
-  grid-column: 2/6;
-  grid-row: 1/3;
+#highlights,
+#highlightsMobile {
   padding-right: 5px;
   padding-left: 5px;
   border: 2px lightgray solid;
   border-radius: 15px;
+}
+
+#highlights {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr;
   grid-template-rows: 60px 4fr 1fr;
@@ -313,11 +316,13 @@ button[type='submit'] {
   grid-row: 2;
   grid-column: 3/8;
   width: auto;
+  height: 100%;
+  margin-bottom: 10px;
 }
 
 .video:first-of-type img {
-  width: auto;
-  height: auto;
+  width: fit-content;
+  height: fit-content;
 }
 
 .video:first-of-type .thumbTitle,
@@ -385,6 +390,19 @@ p .vChannel {
   font-size: 0.75rem;
 }
 
+#highlightsMobile {
+  display: none;
+  overflow: scroll;
+  flex: none;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#highlightsMobile.scroll {
+  flex-flow: row nowrap;
+  scroll-snap-type: x mandatory;
+}
+
 #news {
   display: grid;
   grid-template-rows: 60px repeat(5, 1fr);
@@ -405,8 +423,9 @@ p .vChannel {
   text-decoration: none;
   color: black;
   margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 2px lightgray solid;
+  padding: 0 10px 5px;
+  border-bottom: 2px #17408b solid;
+  border-radius: 10px;
 }
 
 .article:last-child {
@@ -467,7 +486,7 @@ p .vChannel {
 
 .post div {
   margin: 0 5px;
-  border: 2px lightgray solid;
+  border-bottom: 2px #17408b solid;
   border-radius: 10px;
   padding: 10px;
   height: 100%;
@@ -657,6 +676,7 @@ p .vChannel {
   #profile .teamLogo {
     grid-column: 1/2;
     grid-row: 2/5;
+    height: 150px;
     object-fit: contain;
   }
 
@@ -667,7 +687,8 @@ p .vChannel {
     padding-left: 20px;
   }
 
-  #highlights {
+  #highlights,
+  #highlightsMobile {
     grid-column: 1/7;
     grid-row: 2/4;
   }
@@ -738,6 +759,8 @@ p .vChannel {
   #social {
     grid-column: 1/7;
     grid-row: 6/8;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   #connectedItems {
@@ -746,5 +769,68 @@ p .vChannel {
 
   .connectedItem {
     width: 45%;
+  }
+}
+
+@media screen and (max-width: 675px) {
+  main {
+    width: 100%;
+  }
+
+  #userSelectionContainer {
+    grid-gap: 5px;
+    grid-template-rows: 250px repeat(2, 30vh) repeat(5, 350px) 1fr;
+  }
+
+  #highlights {
+    display: none;
+  }
+
+  #highlightsMobile {
+    display: flex;
+  }
+
+  #highlightsMobile a {
+    text-decoration: none;
+  }
+
+  .videoMobile {
+    margin: 0 20px;
+  }
+
+  .videoMobile a {
+    color: black;
+  }
+
+  .thumbTitleMobile {
+    margin: 10px 0;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  #profile {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 60px repeat(3, 1fr);
+  }
+
+  #profile .teamLogo {
+    grid-row: 2/3;
+    height: 50px;
+  }
+
+  #profile .basicDetails {
+    grid-column: 1/2;
+    grid-row: 3/5;
+    justify-self: center;
+    padding-left: 5px;
+  }
+
+  .numPos,
+  .firstName {
+    font-size: 1.05rem;
+  }
+
+  .lastName {
+    font-size: 1.25rem;
   }
 }
