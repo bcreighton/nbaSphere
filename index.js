@@ -1,6 +1,6 @@
 'use strict';
 
-const youtubeAPIKey = 'AIzaSyBOeJM_9wrehRc1wH9v-gJE-RFsmjbuwps';
+const youtubeAPIKey = 'AIzaSyAtoOvD77SHUy0WgDx5dYviuQ4STNDIMLI';
 const socialAPIKey = '626e71bd528d38b317758d064c6441c7';
 let currentSearchItems;
 
@@ -319,6 +319,8 @@ const displayTeam = userSelection => {
   const tShortName = currentItem.shortName;
   const tConf = convertConferenceNames(currentItem.leagues.standard.confName);
   const tDiv = currentItem.leagues.standard.divName;
+
+  $('#profile').addClass('teamProfile');
 
   $('#profile').html(
     `
