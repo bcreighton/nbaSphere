@@ -236,12 +236,12 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
 
     $('#searchResults').append(
       `<li class='resultItem team'>
-                <p class='id hidden'>${conferenceTeamId}</p>
-                <img src=${conferenceTeamLogo} alt='${conferenceTeamName} Logo' class='teamLogo'>
-                <h3 class='teamName searchItemTitle'>${conferenceTeamName}</h3>
-                <p class='teamConference searchSubItem'>Conference: ${teamConference}</p>
-                <p class='teamDivision searchSubItem'>Division: ${teamDivision}</p>
-            </li>`
+          <p class='id hidden'>${conferenceTeamId}</p>
+          <img src=${conferenceTeamLogo} alt='${conferenceTeamName} Logo' class='teamLogo'>
+          <h3 class='teamName searchItemTitle'>${conferenceTeamName}</h3>
+          <p class='teamConference searchSubItem'>Conference: ${teamConference}</p>
+          <p class='teamDivision searchSubItem'>Division: ${teamDivision}</p>
+      </li>`
     );
   }
   $('#searchResultsContainer').removeClass('hidden');
@@ -306,8 +306,8 @@ const displayTeam = userSelection => {
     .text();
   let currentItem = {};
 
-  if (userSelection.length > 1) {
-    currentItem = findNBAObject(teamId, currentSearchItems);
+  if (currentSearchItems.length > 1) {
+    currentItem = findNBATeam(teamId, currentSearchItems);
   } else {
     currentItem = currentSearchItems[0];
   }
@@ -346,7 +346,7 @@ function displayPlayer(userSelection) {
   const playerId = $(userSelection)
     .find('.id')
     .text();
-  const currentItem = findNBAObject(playerId, currentSearchItems);
+  const currentItem = findNBAPlayer(playerId, currentSearchItems);
 
   let pNum = currentItem.leagues.standard.jersey;
   let pPos = currentItem.leagues.standard.pos;
@@ -406,9 +406,17 @@ function displayPlayer(userSelection) {
   $('#userSelectionContainer').css('display', 'grid');
 }
 
-function findNBAObject(value, currentSearchItems) {
+function findNBAPlayer(player, currentSearchItems) {
   for (let i = 0; i < currentSearchItems.length; i++) {
-    if (currentSearchItems[i].playerId === value) {
+    if (currentSearchItems[i].playerId === player) {
+      return currentSearchItems[i];
+    }
+  }
+}
+
+function findNBATeam(team, currentSearchItems) {
+  for (let i = 0; i < currentSearchItems.length; i++) {
+    if (currentSearchItems[i].teamId === team) {
       return currentSearchItems[i];
     }
   }
@@ -833,7 +841,11 @@ const getNBAConference = async conference => {
       currentSearchItems = nbaConference;
     }
   } catch (e) {
-    console.log(e);
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
