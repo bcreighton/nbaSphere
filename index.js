@@ -248,6 +248,8 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
 }
 
 const displayConf = userSelection => {
+  $('#profile').addClass('confDivProfile');
+
   if (
     $(userSelection)
       .find('.conferenceName')
@@ -255,9 +257,10 @@ const displayConf = userSelection => {
   ) {
     $('#profile').html(
       `
-            <h2 class='confName'>Western Conference</h2>
-            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
-            `
+        <h2 class='sectionTitle'>General Information</h2> 
+        <h2 class='confName'>Western Conference</h2>
+        <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+      `
     );
 
     getNBAVideos('nba%20western', 'conference');
@@ -267,9 +270,10 @@ const displayConf = userSelection => {
   } else {
     $('#profile').html(
       `
-            <h2 class='confName'>Eastern Conference</h2>
-            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
-            `
+        <h2 class='sectionTitle'>General Information</h2>
+        <h2 class='confName'>Eastern Conference</h2>
+        <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+      `
     );
 
     getNBAVideos('nba%20eastern', 'conference');
@@ -286,11 +290,14 @@ const displayDivision = userSelection => {
     .find('.divisionName')
     .text();
 
+  $('#profile').addClass('confDivProfile');
+
   $('#profile').html(
     `
-        <h2 class='divName'>${division}</h2>
-        <p class='numTeams'><span class='vitalTitle'>Teams: </span>5</p>
-        `
+      <h2 class='sectionTitle'>General Information</h2>
+      <h2 class='divName'>${division}</h2>
+      <p class='numTeams'><span class='vitalTitle'>Teams: </span>5</p>
+    `
   );
 
   getNBAVideos('nba', division);
@@ -323,13 +330,13 @@ const displayTeam = userSelection => {
 
   $('#profile').html(
     `
-        <h2 class="sectionTitle">General Information</h2>
-        <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
-        <h2 class='teamVital teamCity'>${tCity}</h2>
-        <h2 class='teamVital teamNickname'>${tNickname}</h2>
-        <p class='teamVital teamConference'><span class='vitalTitle'>Conference:</span> ${tConf}</p>
-        <p class='teamVital teamDivision'><span class='vitalTitle'>Division:</span> ${tDiv}</p>
-        `
+      <h2 class="sectionTitle">General Information</h2>
+      <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
+      <h2 class='teamVital teamCity'>${tCity}</h2>
+      <h2 class='teamVital teamNickname'>${tNickname}</h2>
+      <p class='teamVital teamConference'><span class='vitalTitle'>Conference:</span> ${tConf}</p>
+      <p class='teamVital teamDivision'><span class='vitalTitle'>Division:</span> ${tDiv}</p>
+      `
   );
 
   getNBAVideos(tCity, tNickname);
