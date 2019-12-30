@@ -279,7 +279,6 @@ const displayConf = userSelection => {
   }
 
   $('#userSelectionContainer').css('display', 'grid');
-  // $('#userSelectionContainer').removeClass('hidden');
 };
 
 const displayDivision = userSelection => {
@@ -339,7 +338,6 @@ const displayTeam = userSelection => {
   getNBATeamPlayers(teamId);
 
   $('#userSelectionContainer').css('display', 'grid');
-  // $('#userSelectionContainer').removeClass('hidden');
 };
 
 function displayPlayer(userSelection) {
@@ -451,6 +449,7 @@ const getNBAPlayer = async player => {
       currentSearchItems = playersWithTeam;
     }
   } catch (e) {
+    $('.loaderSearch').remove();
     $('#searchResultsContainer').prepend(
       `
       <h2 class='error'>${e}</h2>
@@ -489,8 +488,10 @@ const getNBATeamPlayers = async (...nbaItem) => {
       }
 
       const newTeamPlayers = Array.from(new Set(teamPlayers));
-      
 
+      $('#connectedItems')
+        .find('.error')
+        .remove();
       displayNBATeamPlayers(newTeamPlayers);
       currentSearchItems = newTeamPlayers;
     }
@@ -810,10 +811,14 @@ function getNBATeam(team) {
           `There are no teams in the NBA with the name "${team}"; please try again`
         );
       } else {
+        $('#searchResultsContainer')
+          .find('.error')
+          .remove();
         displayNBATeamSearchResults(nbaTeams);
         currentSearchItems = nbaTeams;
       }
     } catch (e) {
+      $('.loaderSearch').remove();
       $('#searchResultsContainer').prepend(
         `
         <h2 class='error'>${e}</h2>
@@ -853,10 +858,15 @@ const getNBAConference = async conference => {
         }
       }
 
+      $('#searchResultsContainer')
+        .find('.error')
+        .remove();
+
       displayNBAConferenceSearchResults(conference, nbaConference);
       currentSearchItems = nbaConference;
     }
   } catch (e) {
+    $('.loaderSearch').remove();
     $('#searchResultsContainer').prepend(
       `
       <h2 class='error'>${e}</h2>
@@ -1315,12 +1325,21 @@ const connectedItemCLickListener = () => {
     $(this).addClass('selected');
 
     if ($(this).hasClass('player')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayPlayer(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     } else if ($(this).hasClass('division')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayDivision(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     } else if ($(this).hasClass('team')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayTeam(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     }

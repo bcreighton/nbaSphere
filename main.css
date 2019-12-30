@@ -65,6 +65,10 @@ main {
   text-align: center;
 }
 
+.error {
+  color: red;
+}
+
 #mainSearch {
   padding: 40px;
   margin-right: -50%;
@@ -988,6 +992,15 @@ p .vChannel {
   .connectedItem .playerName {
     grid-column: 1/2;
     grid-row: 1/3;
+  }
+
+  .connectedItem.team .teamLogo {
+    grid-column: 1/2;
+    grid-row: 1/3;
+  }
+
+  .connectedItem.team .teamCity {
+    align-self: flex-end;
   }
 
   .resultItem.player .team {
