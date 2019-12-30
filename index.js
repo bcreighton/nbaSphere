@@ -442,13 +442,20 @@ const getNBAPlayer = async player => {
         `There are no players in the NBA with the lastname "${player}"; please try again`
       );
     } else {
+      $('#searchResultsContainer')
+        .find('.error')
+        .remove();
       const playersWithTeam = await getNBAPlayerTeamName(nbaPlayers);
 
       displayNBAPlayerSearchResults(playersWithTeam);
       currentSearchItems = playersWithTeam;
     }
   } catch (e) {
-    console.log(e);
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -482,12 +489,17 @@ const getNBATeamPlayers = async (...nbaItem) => {
       }
 
       const newTeamPlayers = Array.from(new Set(teamPlayers));
+      
 
       displayNBATeamPlayers(newTeamPlayers);
       currentSearchItems = newTeamPlayers;
     }
   } catch (e) {
-    console.log(e);
+    $('#connectedItems').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -551,38 +563,38 @@ const getDivisions = conference => {
       .find('#connectedItemsFlex')
       .html(
         `
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Northwest</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Pacific</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Southwest</h3>
-                <p>5 Teams</p>
-            </li>
-            `
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Northwest</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Pacific</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Southwest</h3>
+            <p>5 Teams</p>
+        </li>
+        `
       );
   } else {
     $('#connectedItems')
       .find('#connectedItemsFlex')
       .html(
         `
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Atlantic</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Central</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Southeast</h3>
-                <p>5 Teams</p>
-            </li>
-            `
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Atlantic</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Central</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Southeast</h3>
+            <p>5 Teams</p>
+        </li>
+        `
       );
   }
 };
@@ -603,28 +615,28 @@ const displayRecentVideos = videos => {
       if (i === 0) {
         $('#highlights').append(
           `
-                  <div class='video'>
-                      <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
-                        <div class='vDetails'>
-                          <h2 class='thumbTitle'>${vTitle}</h2>
-                          <p class='vChannel'>${vChannel}</p>
-                        </div>
-                      </a>
-                  </div>
-                  `
+          <div class='video'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                <div class='vDetails'>
+                  <h2 class='thumbTitle'>${vTitle}</h2>
+                  <p class='vChannel'>${vChannel}</p>
+                </div>
+              </a>
+          </div>
+          `
         );
       } else {
         $('#highlights').append(
           `
-                  <div class='video hover'>
-                      <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
-                        <div class='vDetails'>
-                          <h2 class='thumbTitle'>${vTitle}</h2>
-                          <p class='vChannel'>${vChannel}</p>
-                        </div>
-                      </a>
-                  </div>
-                  `
+          <div class='video hover'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                <div class='vDetails'>
+                  <h2 class='thumbTitle'>${vTitle}</h2>
+                  <p class='vChannel'>${vChannel}</p>
+                </div>
+              </a>
+          </div>
+          `
         );
       }
     }
@@ -660,8 +672,8 @@ const displayRecentVideos = videos => {
   } else {
     $('#highlights').html(
       `
-            <h2 class='noData'>There are no videos to display</h2>
-            `
+      <h2 class='noData'>There are no videos to display</h2>
+      `
     );
   }
 };
@@ -710,25 +722,25 @@ const displayRecentNews = articles => {
 
       $('#news').append(
         `
-                <a href='${aUrl}' class='article' target='_blank'>
-                    <div class='articleContainer'>
-                        <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
-                        <div class='newsText'>
-                            <h2 class='newsTitle'>${aTitle}</h2>
-                            <p class='newsDesc'>${aDesc}</p>
-                            <p class='newsSource'>${aSource} | ${aAuthor}</p>
-                            <p class='newsPubDate'>${aDate}</p>
-                        </div>
-                    </div>
-                </a>
-                `
+        <a href='${aUrl}' class='article' target='_blank'>
+            <div class='articleContainer'>
+                <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
+                <div class='newsText'>
+                    <h2 class='newsTitle'>${aTitle}</h2>
+                    <p class='newsDesc'>${aDesc}</p>
+                    <p class='newsSource'>${aSource} | ${aAuthor}</p>
+                    <p class='newsPubDate'>${aDate}</p>
+                </div>
+            </div>
+        </a>
+        `
       );
     }
   } else {
     $('#news').html(
       `
-            <h2 class='noData'>There are no articles to display</h2>
-            `
+      <h2 class='noData'>There are no articles to display</h2>
+      `
     );
   }
 };
@@ -749,27 +761,27 @@ const displayRecentSocial = posts => {
       if (postImg === undefined) {
         $('#social').append(
           `
-                    <a href=${postUrl} class='post' target='_blank'>
-                        <div>
-                            <p class = 'postContent'>${postContent}</p>
-                            <p class = 'postDate'>${postDate}</p>
-                            <p class = 'network'>${postNetwork}</p>
-                        </div>
-                    </a>
-                    `
+          <a href=${postUrl} class='post' target='_blank'>
+              <div>
+                  <p class = 'postContent'>${postContent}</p>
+                  <p class = 'postDate'>${postDate}</p>
+                  <p class = 'network'>${postNetwork}</p>
+              </div>
+          </a>
+          `
         );
       } else {
         $('#social').append(
           `
-                    <a href=${postUrl} class='post' target='_blank'>
-                        <div>
-                            <img src=${postImg} class = 'postImg' alt = '${postNetwork} Post'>
-                            <p class = 'postContent'>${postContent}</p>
-                            <p class = 'postDate'>${postDate}</p>
-                            <p class = 'network'>${postNetwork}</p>
-                        </div>
-                    </a>
-                    `
+          <a href=${postUrl} class='post' target='_blank'>
+              <div>
+                  <img src=${postImg} class = 'postImg' alt = '${postNetwork} Post'>
+                  <p class = 'postContent'>${postContent}</p>
+                  <p class = 'postDate'>${postDate}</p>
+                  <p class = 'network'>${postNetwork}</p>
+              </div>
+          </a>
+          `
         );
       }
     }
@@ -802,7 +814,11 @@ function getNBATeam(team) {
         currentSearchItems = nbaTeams;
       }
     } catch (e) {
-      console.log(e);
+      $('#searchResultsContainer').prepend(
+        `
+        <h2 class='error'>${e}</h2>
+        `
+      );
     }
   };
 
@@ -874,7 +890,11 @@ const getNBADivision = async division => {
       currentSearchItems = nbaDivisionTeams;
     }
   } catch (e) {
-    console.log(e);
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
