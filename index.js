@@ -1,6 +1,6 @@
 'use strict';
 
-const youtubeAPIKey = 'AIzaSyBOeJM_9wrehRc1wH9v-gJE-RFsmjbuwps';
+const youtubeAPIKey = 'AIzaSyAtoOvD77SHUy0WgDx5dYviuQ4STNDIMLI';
 const socialAPIKey = '626e71bd528d38b317758d064c6441c7';
 let currentSearchItems;
 
@@ -51,13 +51,15 @@ function displayNBAPlayerSearchResults(players) {
                 <p class='searchId hidden'>${searchId}</p>
                 <p class='id hidden'>${playerId}</p>
                 <h3 class='playerName searchItemTitle'>${firstName} ${lastName}</h3>
-                <p class='team seachSubItem'>${team}</p>
-                <p class='position seachSubItem'>Position: ${pos}</p>
-                <p class='jerseyNumber seachSubItem'>#${jersey}</p>
+                <p class='team searchSubItem'>${team}</p>
+                <p class='position searchSubItem'>Position: ${pos}</p>
+                <p class='jerseyNumber searchSubItem'>#${jersey}</p>
             </li>`
     );
   }
-  $('#searchResultsContainer').removeClass('hidden');
+  $('#searchResults')
+    .find('.loaderSearch')
+    .remove();
 }
 
 function displayNBATeamPlayers(teamPlayers) {
@@ -66,7 +68,10 @@ function displayNBATeamPlayers(teamPlayers) {
   const team = teamPlayers[0].team.fullName;
 
   $('#connectedItems').html(
-    `<h2 class='sectionTitle'>Other ${team} Players</h2>`
+    `
+    <h2 class='sectionTitle'>Other ${team} Players</h2>
+    <div id='connectedItemsFlex'></div>
+    `
   );
 
   for (let i = 0; i < teamPlayers.length; i++) {
@@ -91,14 +96,16 @@ function displayNBATeamPlayers(teamPlayers) {
       jersey = 'N/A';
     }
 
-    $('#connectedItems').append(
-      `<li class='connectedItem player'>
+    $('#connectedItems')
+      .find('#connectedItemsFlex')
+      .append(
+        `<li class='connectedItem player'>
                 <p class='id hidden'>${playerId}</p>
                 <h3 class='playerName searchItemTitle'>${firstName} ${lastName}</h3>
-                <p class='position seachSubItem'>Position: ${pos}</p>
-                <p class='jerseyNumber seachSubItem'>#${jersey}</p>
+                <p class='position searchSubItem'>Position: ${pos}</p>
+                <p class='jerseyNumber searchSubItem'>#${jersey}</p>
             </li>`
-    );
+      );
   }
 }
 
@@ -106,7 +113,10 @@ const displayDivisionTeams = (division, divisionTeams) => {
   $('#connectedItems').empty();
 
   $('#connectedItems').html(
-    `<h2 class = sectionTitle>${division} Division Teams</h2>`
+    `
+    <h2 class = sectionTitle>${division} Division Teams</h2>
+    <div id='connectedItemsFlex'></div>
+    `
   );
 
   for (let i = 0; i < divisionTeams.length; i++) {
@@ -115,8 +125,10 @@ const displayDivisionTeams = (division, divisionTeams) => {
     const tCity = divisionTeams[i].city;
     const tNickname = divisionTeams[i].nickname;
 
-    $('#connectedItems').append(
-      `
+    $('#connectedItems')
+      .find('#connectedItemsFlex')
+      .append(
+        `
             <li class='connectedItem team'>
                 <img src='${tLogo}' alt='${tCity} ${tNickname} Logo' class = 'teamLogo'>
                 <p class = 'id hidden'>${teamId}</p>
@@ -124,7 +136,7 @@ const displayDivisionTeams = (division, divisionTeams) => {
                 <h3 class = 'teamName searchItemTitle'>${tNickname}</h3>
             </li>
             `
-    );
+      );
   }
 };
 
@@ -145,8 +157,8 @@ function displayNBATeamSearchResults(teams) {
                 <p class='id hidden'>${teamId}</p>
                 <img src='${teamLogo}' alt='${teamName} Logo' class='teamLogo'>
                 <h3 class='teamName searchItemTitle'>${teamName}</h3>
-                <p class='teamConference seachSubItem'>Conference: ${conference}</p>
-                <p class='teamDivision seachSubItem'>Division: ${division}</p>
+                <p class='teamConference searchSubItem'>Conference: ${conference}</p>
+                <p class='teamDivision searchSubItem'>Division: ${division}</p>
             </li>`
     );
   }
@@ -224,18 +236,20 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
 
     $('#searchResults').append(
       `<li class='resultItem team'>
-                <p class='id hidden'>${conferenceTeamId}</p>
-                <img src=${conferenceTeamLogo} alt='${conferenceTeamName} Logo' class='teamLogo'>
-                <h3 class='teamName searchItemTitle'>${conferenceTeamName}</h3>
-                <p class='teamConference seachSubItem'>Conference: ${teamConference}</p>
-                <p class='teamDivision seachSubItem'>Division: ${teamDivision}</p>
-            </li>`
+          <p class='id hidden'>${conferenceTeamId}</p>
+          <img src=${conferenceTeamLogo} alt='${conferenceTeamName} Logo' class='teamLogo'>
+          <h3 class='teamName searchItemTitle'>${conferenceTeamName}</h3>
+          <p class='teamConference searchSubItem'>Conference: ${teamConference}</p>
+          <p class='teamDivision searchSubItem'>Division: ${teamDivision}</p>
+      </li>`
     );
   }
   $('#searchResultsContainer').removeClass('hidden');
 }
 
 const displayConf = userSelection => {
+  $('#profile').addClass('confDivProfile');
+
   if (
     $(userSelection)
       .find('.conferenceName')
@@ -243,9 +257,10 @@ const displayConf = userSelection => {
   ) {
     $('#profile').html(
       `
-            <h2 class='confName'>Western Conference</h2>
-            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
-            `
+        <h2 class='sectionTitle'>General Information</h2> 
+        <h2 class='confName'>Western Conference</h2>
+        <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+      `
     );
 
     getNBAVideos('nba%20western', 'conference');
@@ -255,9 +270,10 @@ const displayConf = userSelection => {
   } else {
     $('#profile').html(
       `
-            <h2 class='confName'>Eastern Conference</h2>
-            <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
-            `
+        <h2 class='sectionTitle'>General Information</h2>
+        <h2 class='confName'>Eastern Conference</h2>
+        <p class='numTeams'><span class='vitalTitle'>Teams: </span>${currentSearchItems.length}</p>
+      `
     );
 
     getNBAVideos('nba%20eastern', 'conference');
@@ -267,7 +283,6 @@ const displayConf = userSelection => {
   }
 
   $('#userSelectionContainer').css('display', 'grid');
-  // $('#userSelectionContainer').removeClass('hidden');
 };
 
 const displayDivision = userSelection => {
@@ -275,11 +290,14 @@ const displayDivision = userSelection => {
     .find('.divisionName')
     .text();
 
+  $('#profile').addClass('confDivProfile');
+
   $('#profile').html(
     `
-        <h2 class='divName'>${division}</h2>
-        <p class='numTeams'><span class='vitalTitle'>Teams: </span>5</p>
-        `
+      <h2 class='sectionTitle'>General Information</h2>
+      <h2 class='divName'>${division}</h2>
+      <p class='numTeams'><span class='vitalTitle'>Teams: </span>5</p>
+    `
   );
 
   getNBAVideos('nba', division);
@@ -294,8 +312,8 @@ const displayTeam = userSelection => {
     .text();
   let currentItem = {};
 
-  if (userSelection.length > 1) {
-    currentItem = findNBAObject(teamId, currentSearchItems);
+  if (currentSearchItems.length > 1) {
+    currentItem = findNBATeam(teamId, currentSearchItems);
   } else {
     currentItem = currentSearchItems[0];
   }
@@ -308,15 +326,17 @@ const displayTeam = userSelection => {
   const tConf = convertConferenceNames(currentItem.leagues.standard.confName);
   const tDiv = currentItem.leagues.standard.divName;
 
+  $('#profile').addClass('teamProfile');
+
   $('#profile').html(
     `
-        <h2 class="sectionTitle">General Information</h2>
-        <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
-        <h2 class='teamCity'>${tCity}</h2>
-        <h2 class='teamNickname'>${tNickname}</h2>
-        <p class='teamConference'><span class='vitalTitle'>Conference:</span> ${tConf}</p>
-        <p class='teamDivision'><span class='vitalTitle'>Division:</span> ${tDiv}</p>
-        `
+      <h2 class="sectionTitle">General Information</h2>
+      <img src=${tLogo} class='teamLogo' alt='${tName} Logo'>
+      <h2 class='teamVital teamCity'>${tCity}</h2>
+      <h2 class='teamVital teamNickname'>${tNickname}</h2>
+      <p class='teamVital teamConference'><span class='vitalTitle'>Conference:</span> ${tConf}</p>
+      <p class='teamVital teamDivision'><span class='vitalTitle'>Division:</span> ${tDiv}</p>
+      `
   );
 
   getNBAVideos(tCity, tNickname);
@@ -325,14 +345,13 @@ const displayTeam = userSelection => {
   getNBATeamPlayers(teamId);
 
   $('#userSelectionContainer').css('display', 'grid');
-  // $('#userSelectionContainer').removeClass('hidden');
 };
 
 function displayPlayer(userSelection) {
   const playerId = $(userSelection)
     .find('.id')
     .text();
-  const currentItem = findNBAObject(playerId, currentSearchItems);
+  const currentItem = findNBAPlayer(playerId, currentSearchItems);
 
   let pNum = currentItem.leagues.standard.jersey;
   let pPos = currentItem.leagues.standard.pos;
@@ -390,12 +409,19 @@ function displayPlayer(userSelection) {
   getNBATeamPlayers(teamId, playerId);
 
   $('#userSelectionContainer').css('display', 'grid');
-  // $('#userSelectionContainer').removeClass('hidden');
 }
 
-function findNBAObject(value, currentSearchItems) {
+function findNBAPlayer(player, currentSearchItems) {
   for (let i = 0; i < currentSearchItems.length; i++) {
-    if (currentSearchItems[i].playerId === value) {
+    if (currentSearchItems[i].playerId === player) {
+      return currentSearchItems[i];
+    }
+  }
+}
+
+function findNBATeam(team, currentSearchItems) {
+  for (let i = 0; i < currentSearchItems.length; i++) {
+    if (currentSearchItems[i].teamId === team) {
       return currentSearchItems[i];
     }
   }
@@ -421,13 +447,21 @@ const getNBAPlayer = async player => {
         `There are no players in the NBA with the lastname "${player}"; please try again`
       );
     } else {
+      $('#searchResultsContainer')
+        .find('.error')
+        .remove();
       const playersWithTeam = await getNBAPlayerTeamName(nbaPlayers);
 
       displayNBAPlayerSearchResults(playersWithTeam);
       currentSearchItems = playersWithTeam;
     }
   } catch (e) {
-    console.log(e);
+    $('.loaderSearch').remove();
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -462,11 +496,18 @@ const getNBATeamPlayers = async (...nbaItem) => {
 
       const newTeamPlayers = Array.from(new Set(teamPlayers));
 
+      $('#connectedItems')
+        .find('.error')
+        .remove();
       displayNBATeamPlayers(newTeamPlayers);
       currentSearchItems = newTeamPlayers;
     }
   } catch (e) {
-    console.log(e);
+    $('#connectedItems').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -518,42 +559,51 @@ const getNBAPlayerTeamName = async players => {
 };
 
 const getDivisions = conference => {
+  $('#connectedItems').html(
+    `
+    <h2 class='divisionsTitle sectionTitle'>Divisions</h2>
+    <div id='connectedItemsFlex'></div>
+    `
+  );
+
   if (conference === 'Western') {
-    $('#connectedItems').html(
-      `
-            <h2 class='divisionsTitle'>Divisions</h2>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Northwest</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Pacific</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Southwest</h3>
-                <p>5 Teams</p>
-            </li>
-            `
-    );
+    $('#connectedItems')
+      .find('#connectedItemsFlex')
+      .html(
+        `
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Northwest</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Pacific</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Southwest</h3>
+            <p>5 Teams</p>
+        </li>
+        `
+      );
   } else {
-    $('#connectedItems').html(
-      `
-            <h2 class='divisionsTitle'>Divisions</h2>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Atlantic</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Central</h3>
-                <p>5 Teams</p>
-            </li>
-            <li class='connectedItem division'>
-                <h3 class='divisionName'>Southeast</h3>
-                <p>5 Teams</p>
-            </li>
-            `
-    );
+    $('#connectedItems')
+      .find('#connectedItemsFlex')
+      .html(
+        `
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Atlantic</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Central</h3>
+            <p>5 Teams</p>
+        </li>
+        <li class='connectedItem division'>
+            <h3 class='divisionName'>Southeast</h3>
+            <p>5 Teams</p>
+        </li>
+        `
+      );
   }
 };
 
@@ -570,27 +620,74 @@ const displayRecentVideos = videos => {
       const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
       const vChannel = videos.items[i].snippet.channelTitle;
 
-      $('#highlights').append(
-        `
-                <div class='video'>
-                    <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'></a>
-                    <h2 class='thumbTitle'>${vTitle}</h2>
-                    <p class='vChannel'>${vChannel}</p>
+      if (i === 0) {
+        $('#highlights').append(
+          `
+          <div class='video'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                <div class='vDetails'>
+                  <h2 class='thumbTitle'>${vTitle}</h2>
+                  <p class='vChannel'>${vChannel}</p>
                 </div>
-                `
-      );
+              </a>
+          </div>
+          `
+        );
+      } else {
+        $('#highlights').append(
+          `
+          <div class='video hover'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumb'>
+                <div class='vDetails'>
+                  <h2 class='thumbTitle'>${vTitle}</h2>
+                  <p class='vChannel'>${vChannel}</p>
+                </div>
+              </a>
+          </div>
+          `
+        );
+      }
+    }
+
+    $('#highlightsMobile').html(
+      `
+      <h2 class='sectionTitle'>Recent Videos</h2>
+      <div id='videoFlex' class='scroll'></div>
+      `
+    );
+
+    for (let i = 0; i < videos.items.length; i++) {
+      const vId = videos.items[i].id.videoId;
+      const vThumb = videos.items[i].snippet.thumbnails.high.url;
+      const vTitle = truncateVideoTitle(videos.items[i].snippet.title);
+      const vChannel = videos.items[i].snippet.channelTitle;
+
+      $('#highlightsMobile')
+        .find('#videoFlex')
+        .append(
+          `
+          <div class='videoMobile'>
+              <a href='${youTubeVideoLink}${vId}' target='_blank'><img src=${vThumb} alt='${vTitle}' class='videoThumbMobile'>
+                <div class='vDetailsMobile'>
+                  <h2 class='thumbTitleMobile'>${vTitle}</h2>
+                  <p class='vChannelMobile'>${vChannel}</p>
+                </div>
+              </a>
+          </div>
+        `
+        );
     }
   } else {
     $('#highlights').html(
       `
-            <h2 class='noData'>There are no videos to display</h2>
-            `
+      <h2 class='noData'>There are no videos to display</h2>
+      `
     );
   }
 };
 
 const truncateVideoTitle = videoTitle => {
-  videoTitle = videoTitle.slice(0, 70);
+  videoTitle = videoTitle.slice(0, 60);
   return `${videoTitle}...`;
 };
 
@@ -617,7 +714,7 @@ const displayRecentNews = articles => {
   $('#news').empty();
 
   if (articles.length !== 0) {
-    $('#news').html(`<h2 class='sectionTitle'>Recent News</h2>`);
+    $('#news').html(`<h2 class='sectionTitle'>Popular News</h2>`);
     for (let i = 0; i < articles.length; i++) {
       const aImg = articles[i].urlToImage;
       const aTitle = truncateTitle(articles[i].title);
@@ -633,25 +730,25 @@ const displayRecentNews = articles => {
 
       $('#news').append(
         `
-                <a href='${aUrl}' class='article' target='_blank'>
-                    <div class='articleContainer'>
-                        <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
-                        <div class='newsText'>
-                            <h2 class='newsTitle'>${aTitle}</h2>
-                            <p class='newsDesc'>${aDesc}</p>
-                            <p class='newsSource'>${aSource} | ${aAuthor}</p>
-                            <p class='newsPubDate'>${aDate}</p>
-                        </div>
-                    </div>
-                </a>
-                `
+        <a href='${aUrl}' class='article' target='_blank'>
+            <div class='articleContainer'>
+                <img src='${aImg}' class='articleImg' alt='${aTitle} article thumbnail'>
+                <div class='newsText'>
+                    <h2 class='newsTitle'>${aTitle}</h2>
+                    <p class='newsDesc'>${aDesc}</p>
+                    <p class='newsSource'>${aSource} | ${aAuthor}</p>
+                    <p class='newsPubDate'>${aDate}</p>
+                </div>
+            </div>
+        </a>
+        `
       );
     }
   } else {
     $('#news').html(
       `
-            <h2 class='noData'>There are no articles to display</h2>
-            `
+      <h2 class='noData'>There are no articles to display</h2>
+      `
     );
   }
 };
@@ -672,27 +769,27 @@ const displayRecentSocial = posts => {
       if (postImg === undefined) {
         $('#social').append(
           `
-                    <a href=${postUrl} class='post' target='_blank'>
-                        <div>
-                            <p class = 'postContent'>${postContent}</p>
-                            <p class = 'postDate'>${postDate}</p>
-                            <p class = 'network'>${postNetwork}</p>
-                        </div>
-                    </a>
-                    `
+          <a href=${postUrl} class='post' target='_blank'>
+              <div>
+                  <p class = 'postContent'>${postContent}</p>
+                  <p class = 'postDate'>${postDate}</p>
+                  <p class = 'network'>${postNetwork}</p>
+              </div>
+          </a>
+          `
         );
       } else {
         $('#social').append(
           `
-                    <a href=${postUrl} class='post' target='_blank'>
-                        <div>
-                            <img src=${postImg} class = 'postImg' alt = '${postNetwork} Post'>
-                            <p class = 'postContent'>${postContent}</p>
-                            <p class = 'postDate'>${postDate}</p>
-                            <p class = 'network'>${postNetwork}</p>
-                        </div>
-                    </a>
-                    `
+          <a href=${postUrl} class='post' target='_blank'>
+              <div>
+                  <img src=${postImg} class = 'postImg' alt = '${postNetwork} Post'>
+                  <p class = 'postContent'>${postContent}</p>
+                  <p class = 'postDate'>${postDate}</p>
+                  <p class = 'network'>${postNetwork}</p>
+              </div>
+          </a>
+          `
         );
       }
     }
@@ -721,11 +818,19 @@ function getNBATeam(team) {
           `There are no teams in the NBA with the name "${team}"; please try again`
         );
       } else {
+        $('#searchResultsContainer')
+          .find('.error')
+          .remove();
         displayNBATeamSearchResults(nbaTeams);
         currentSearchItems = nbaTeams;
       }
     } catch (e) {
-      console.log(e);
+      $('.loaderSearch').remove();
+      $('#searchResultsContainer').prepend(
+        `
+        <h2 class='error'>${e}</h2>
+        `
+      );
     }
   };
 
@@ -760,11 +865,20 @@ const getNBAConference = async conference => {
         }
       }
 
+      $('#searchResultsContainer')
+        .find('.error')
+        .remove();
+
       displayNBAConferenceSearchResults(conference, nbaConference);
       currentSearchItems = nbaConference;
     }
   } catch (e) {
-    console.log(e);
+    $('.loaderSearch').remove();
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -793,7 +907,11 @@ const getNBADivision = async division => {
       currentSearchItems = nbaDivisionTeams;
     }
   } catch (e) {
-    console.log(e);
+    $('#searchResultsContainer').prepend(
+      `
+      <h2 class='error'>${e}</h2>
+      `
+    );
   }
 };
 
@@ -953,9 +1071,132 @@ function getSupportingData() {
   getNBASocial();
 }
 
+const searchLoader = () => {
+  $('#searchResults').append(
+    `
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    
+    <div class='loaderSearch'>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+      <div class='load loaderSearchText'></div>
+    </div>
+    `
+  );
+};
+
+const socialLoader = () => {
+  $('#social').html(
+    `
+    <h2 class='sectionTitle'>Recent Social Media</h2>
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+
+    <div class='loaderPost'>
+        <div class='load loaderImg'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+        <div class='load loaderText'></div>
+    </div>
+    `
+  );
+};
+
+const connectedItemLoader = () => {
+  $('#connectedItems').html(
+    `
+      <h2 class='sectionTitle'>Connected Items</h2>
+
+      <div id='loaderGrid'>
+        <div class='loaderConnectedItem'>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+        </div>
+        <div class='loaderConnectedItem'>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+        </div>
+        <div class='loaderConnectedItem'>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+          <div class='load loaderSearchText'></div>
+        </div>
+      </div>
+    `
+  );
+};
+
 function searchTypeController() {
   $('#teamButton').click(function() {
-    $('.error').remove();
+    $('.searchError').remove();
 
     $(this).addClass('hidden');
     $('#playerButton').removeClass('hidden');
@@ -967,7 +1208,7 @@ function searchTypeController() {
   });
 
   $('#conferenceButton').click(function() {
-    $('.error').remove();
+    $('.searchError').remove();
 
     $(this).addClass('hidden');
     $('#playerButton').removeClass('hidden');
@@ -979,7 +1220,7 @@ function searchTypeController() {
   });
 
   $('#playerButton').click(function() {
-    $('.error').remove();
+    $('.searchError').remove();
 
     $(this).addClass('hidden');
     $('#teamButton').removeClass('hidden');
@@ -1002,7 +1243,7 @@ function clearData() {
 function watchPlayerForm() {
   $('#nbaPlayerSearch').submit(event => {
     event.preventDefault();
-    $('.error').remove();
+    $('.searchError').remove();
 
     const playerInput = $('#playerLastName').val();
     const regex = /^[a-zA-Z]+$/;
@@ -1010,13 +1251,13 @@ function watchPlayerForm() {
     if (!$('#nbaPlayerSearch').hasClass('hidden')) {
       if (playerInput === '' || playerInput === null) {
         $('#nbaPlayerSearch').after(
-          `<span class='error'>Please enter a NBA player's last name</span>`
+          `<span class='searchError'>Please enter a NBA player's last name</span>`
         );
         $('#playerLastName').focus();
         return false;
       } else if (regex.test(playerInput) === false) {
         $('#nbaPlayerSearch').after(
-          `<span class='error'>Please enter a NBA player's last name only i.e: Curry</span>`
+          `<span class='searchError'>Please enter a NBA player's last name only i.e: Curry</span>`
         );
         $('#playerLastName').focus();
         return false;
@@ -1025,9 +1266,18 @@ function watchPlayerForm() {
 
         clearData();
         $(`#userSelectionContainer`).css('display', 'none');
-        // $(`#userSelectionContainer`).addClass('hidden');
+
+        $('#searchResults').empty();
+
+        $('#mainSearch').css('top', '15%');
+
+        clearData();
+        $(`#userSelectionContainer`).css('display', 'none');
 
         const playerLastName = $('#playerLastName').val();
+
+        $('#searchResultsContainer').removeClass('hidden');
+        searchLoader();
 
         getNBAPlayer(playerLastName);
       }
@@ -1038,7 +1288,7 @@ function watchPlayerForm() {
 function watchTeamForm() {
   $('#nbaTeamSearch').submit(event => {
     event.preventDefault();
-    $('.error').remove();
+    $('.searchError').remove();
 
     const teamInput = $('#teamName').val();
     const regex = /^[a-zA-Z]+$/;
@@ -1046,13 +1296,13 @@ function watchTeamForm() {
     if (!$('#nbaTeamSearch').hasClass('hidden')) {
       if (teamInput === '' || teamInput === null) {
         $('#nbaTeamSearch').after(
-          `<span class='error'>Please enter a NBA team name i.e: Bulls</span>`
+          `<span class='searchError'>Please enter a NBA team name i.e: Bulls</span>`
         );
         $('#teamName').focus();
         return false;
       } else if (regex.test(teamInput) === false) {
         $('#nbaTeamSearch').after(
-          `<span class='error'>Please enter a NBA team name only i.e: Bulls</span>`
+          `<span class='searchError'>Please enter a NBA team name only i.e: Bulls</span>`
         );
         $('#teamName').focus();
         return false;
@@ -1061,9 +1311,18 @@ function watchTeamForm() {
 
         clearData();
         $(`#userSelectionContainer`).css('display', 'none');
-        // $(`#userSelectionContainer`).addClass('hidden');
+
+        $('#searchResults').empty();
+
+        $('#mainSearch').css('top', '15%');
+
+        clearData();
+        $(`#userSelectionContainer`).css('display', 'none');
 
         const teamName = $('#teamName').val();
+
+        $('#searchResultsContainer').removeClass('hidden');
+        searchLoader();
 
         getNBATeam(teamName);
       }
@@ -1074,7 +1333,7 @@ function watchTeamForm() {
 function watchConferenceForm() {
   $('#nbaConferenceSearch').submit(event => {
     event.preventDefault();
-    $('.error').remove();
+    $('.searchError').remove();
 
     const conferenceInput = $('#conferenceName').val();
     const regex = /^[a-zA-Z]+$/;
@@ -1082,13 +1341,13 @@ function watchConferenceForm() {
     if (!$('#nbaConferenceSearch').hasClass('hidden')) {
       if (conferenceInput === '' || conferenceInput === null) {
         $('#nbaConferenceSearch').after(
-          `<span class='error'>Please enter a NBA conference name</span>`
+          `<span class='searchError'>Please enter a NBA conference name</span>`
         );
         $('#conferenceName').focus();
         return false;
       } else if (regex.test(conferenceInput) === false) {
         $('#nbaConferenceSearch').after(
-          `<span class='error'>Please enter a NBA conference name only i.e: West</span>`
+          `<span class='searchError'>Please enter a NBA conference name only i.e: West</span>`
         );
         $('#conferenceName').focus();
         return false;
@@ -1097,7 +1356,6 @@ function watchConferenceForm() {
 
         clearData();
         $(`#userSelectionContainer`).css('display', 'none');
-        // $(`#userSelectionContainer`).addClass('hidden');
 
         let conferenceName = $('#conferenceName').val();
 
@@ -1109,6 +1367,9 @@ function watchConferenceForm() {
         ) {
           conferenceName = 'east';
         }
+
+        $('#searchResultsContainer').removeClass('hidden');
+        searchLoader();
 
         getNBAConference(conferenceName);
       }
@@ -1125,45 +1386,21 @@ function searchResultClickListener() {
       const team = $(this)
         .find('.team')
         .text();
-      $('#social').html(
-        `
-                <h2 class='sectionTitle'>Recent Social Media</h2>
-                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
-                `
-      );
+      socialLoader();
+      connectedItemLoader();
 
-      $('#connectedItems').html(
-        `
-                <h2 class='sectionTitle'>Other ${team} Players</h2>
-                <h2 class='loading' style='grid-column: 1/7; grid-row: 3;'>${team} players are loading...</h2>
-                `
-      );
       displayPlayer(this);
     } else if ($(this).hasClass('team')) {
       const team = $(this)
         .find('.teamName')
         .text();
-      $('#social').html(
-        `
-                <h2 class='sectionTitle'>Recent Social Media</h2>
-                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
-                `
-      );
 
-      $('#connectedItems').html(
-        `
-                <h2 class='sectionTitle'>Players</h2>
-                <h2 class='loading' style='grid-column: 1/7; grid-row: 3;'>${team} players are loading...</h2>
-                `
-      );
+      socialLoader();
+      connectedItemLoader();
+
       displayTeam(this);
     } else if ($(this).hasClass('conference')) {
-      $('#social').html(
-        `
-                <h2 class='sectionTitle'>Recent Social Media</h2>
-                <h2 class='loading' style='grid-row: 3;'>Social posts are loading...</h2>
-                `
-      );
+      socialLoader();
       displayConf(this);
     }
   });
@@ -1175,12 +1412,21 @@ const connectedItemCLickListener = () => {
     $(this).addClass('selected');
 
     if ($(this).hasClass('player')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayPlayer(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     } else if ($(this).hasClass('division')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayDivision(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     } else if ($(this).hasClass('team')) {
+      socialLoader();
+      connectedItemLoader();
+
       displayTeam(this);
       $('html, body').animate({ scrollTop: 0 }, 'slow');
     }
