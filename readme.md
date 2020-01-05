@@ -2,7 +2,7 @@
 
 ![NBA Sphere use demo](images/appDemo.gif)
 
-> Your one stop shop for your favorit NBA Player's sphere!
+> Your one stop shop for your favorite NBA Player's sphere!
 
 ---
 
