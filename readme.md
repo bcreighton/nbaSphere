@@ -1,6 +1,6 @@
 # NBA Sphere
 
-![NBA Sphere use demo](images\appDemo.gif)
+![NBA Sphere use demo](images/appDemo.gif)
 
 > Your one stop shop for your favorit NBA Player's sphere!
 
@@ -28,7 +28,7 @@ This application will continue to grow; eventually showing game data, player sta
 
 - HTML
 - CSS
-- Javascript
+- JavaScript
 - jQuery
 
 [Back To The Top](#nba-sphere)
