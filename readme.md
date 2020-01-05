@@ -58,7 +58,7 @@ This application will continue to grow; eventually showing game data, player sta
 
 No licensing available
 
-Copyright (c) [2019][bryson creighton]
+Copyright (c) [2019] [Bryson Creighton]
 
 [Back To The Top](#nba-sphere)
 
