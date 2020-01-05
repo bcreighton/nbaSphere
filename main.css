@@ -57,6 +57,15 @@ h6 {
 }
 
 /* ----------------------------------------------- */
+.brand {
+  text-decoration: none;
+}
+
+.brand:hover,
+brand:visited,
+brand:active {
+  color: white;
+}
 
 main {
   width: 80%;
