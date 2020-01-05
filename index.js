@@ -4,7 +4,7 @@ const youtubeAPIKey = 'AIzaSyAtoOvD77SHUy0WgDx5dYviuQ4STNDIMLI';
 const socialAPIKey = '626e71bd528d38b317758d064c6441c7';
 let currentSearchItems;
 
-function convertConferenceNames(conference) {
+const convertConferenceNames = conference => {
   if (conference === 'West') {
     conference = 'Western';
   } else if (conference === 'East') {
@@ -12,9 +12,9 @@ function convertConferenceNames(conference) {
   }
 
   return conference;
-}
+};
 
-function displayNBAPlayerSearchResults(players) {
+const displayNBAPlayerSearchResults = players => {
   $('#searchResults').empty();
 
   for (let i = 0; i < players.length; i++) {
@@ -60,9 +60,9 @@ function displayNBAPlayerSearchResults(players) {
   $('#searchResults')
     .find('.loaderSearch')
     .remove();
-}
+};
 
-function displayNBATeamPlayers(teamPlayers) {
+const displayNBATeamPlayers = teamPlayers => {
   $('#connectedItems').empty();
 
   const team = teamPlayers[0].team.fullName;
@@ -107,7 +107,7 @@ function displayNBATeamPlayers(teamPlayers) {
             </li>`
       );
   }
-}
+};
 
 const displayDivisionTeams = (division, divisionTeams) => {
   $('#connectedItems').empty();
@@ -140,7 +140,7 @@ const displayDivisionTeams = (division, divisionTeams) => {
   }
 };
 
-function displayNBATeamSearchResults(teams) {
+const displayNBATeamSearchResults = teams => {
   $('#searchResults').empty();
 
   for (let i = 0; i < teams.length; i++) {
@@ -163,9 +163,9 @@ function displayNBATeamSearchResults(teams) {
     );
   }
   $('#searchResultsContainer').removeClass('hidden');
-}
+};
 
-function updateConference(conference) {
+const updateConference = conference => {
   if (conference === 'west') {
     $('#searchResults').append(
       `<li class='resultItem conference'>
@@ -181,9 +181,9 @@ function updateConference(conference) {
             </li>`
     );
   }
-}
+};
 
-function convertHeight(height) {
+const convertHeight = height => {
   if (height === 0) {
     return height;
   } else {
@@ -197,18 +197,18 @@ function convertHeight(height) {
     height = `${feet}ft ${inches}in`;
     return height;
   }
-}
+};
 
-function convertWeight(weight) {
+const convertWeight = weight => {
   if (weight === 0) {
     return weight;
   } else {
     weight = Math.round(weight * 2.20462);
     return weight;
   }
-}
+};
 
-function convertDate(date) {
+const convertDate = date => {
   if (date === '' || date === null) {
     return (date = 'Unknown');
   } else {
@@ -218,9 +218,9 @@ function convertDate(date) {
 
     return (date = `${m}/${d}/${y}`);
   }
-}
+};
 
-function displayNBAConferenceSearchResults(conference, conferenceTeams) {
+const displayNBAConferenceSearchResults = (conference, conferenceTeams) => {
   $('#searchResults').empty();
 
   updateConference(conference);
@@ -245,7 +245,7 @@ function displayNBAConferenceSearchResults(conference, conferenceTeams) {
     );
   }
   $('#searchResultsContainer').removeClass('hidden');
-}
+};
 
 const displayConf = userSelection => {
   $('#profile').addClass('confDivProfile');
@@ -347,7 +347,7 @@ const displayTeam = userSelection => {
   $('#userSelectionContainer').css('display', 'grid');
 };
 
-function displayPlayer(userSelection) {
+const displayPlayer = userSelection => {
   const playerId = $(userSelection)
     .find('.id')
     .text();
@@ -409,23 +409,23 @@ function displayPlayer(userSelection) {
   getNBATeamPlayers(teamId, playerId);
 
   $('#userSelectionContainer').css('display', 'grid');
-}
+};
 
-function findNBAPlayer(player, currentSearchItems) {
+const findNBAPlayer = (player, currentSearchItems) => {
   for (let i = 0; i < currentSearchItems.length; i++) {
     if (currentSearchItems[i].playerId === player) {
       return currentSearchItems[i];
     }
   }
-}
+};
 
-function findNBATeam(team, currentSearchItems) {
+const findNBATeam = (team, currentSearchItems) => {
   for (let i = 0; i < currentSearchItems.length; i++) {
     if (currentSearchItems[i].teamId === team) {
       return currentSearchItems[i];
     }
   }
-}
+};
 
 const getNBAPlayer = async player => {
   try {
@@ -796,7 +796,7 @@ const displayRecentSocial = posts => {
   }
 };
 
-function getNBATeam(team) {
+const getNBATeam = team => {
   const fetchNBATeam = async () => {
     try {
       const nbaTeamRes = await fetch(
@@ -835,7 +835,7 @@ function getNBATeam(team) {
   };
 
   fetchNBATeam();
-}
+};
 
 const getNBAConference = async conference => {
   try {
@@ -1065,11 +1065,11 @@ const shuffle = arr => {
   return arr;
 };
 
-function getSupportingData() {
+const getSupportingData = () => {
   getNBANews();
   getNBAVideos();
   getNBASocial();
-}
+};
 
 const searchLoader = () => {
   $('#searchResults').append(
@@ -1194,7 +1194,7 @@ const connectedItemLoader = () => {
   );
 };
 
-function searchTypeController() {
+const searchTypeController = () => {
   $('#teamButton').click(function() {
     $('.searchError').remove();
 
@@ -1230,17 +1230,17 @@ function searchTypeController() {
     $('#nbaConferenceSearch').addClass('hidden');
     $('#nbaTeamSearch').addClass('hidden');
   });
-}
+};
 
-function clearData() {
+const clearData = () => {
   $(`#profile`).empty();
   $(`#highlights`).empty();
   $(`#news`).empty();
   $(`#social`).empty();
   $(`#connectedItems`).empty();
-}
+};
 
-function watchPlayerForm() {
+const watchPlayerForm = () => {
   $('#nbaPlayerSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
@@ -1283,9 +1283,9 @@ function watchPlayerForm() {
       }
     }
   });
-}
+};
 
-function watchTeamForm() {
+const watchTeamForm = () => {
   $('#nbaTeamSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
@@ -1328,9 +1328,9 @@ function watchTeamForm() {
       }
     }
   });
-}
+};
 
-function watchConferenceForm() {
+const watchConferenceForm = () => {
   $('#nbaConferenceSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
@@ -1375,9 +1375,9 @@ function watchConferenceForm() {
       }
     }
   });
-}
+};
 
-function searchResultClickListener() {
+const searchResultClickListener = () => {
   $('#searchResults').on('click', '.resultItem', function() {
     $('#searchResultsContainer').addClass('hidden');
     $(this).addClass('selected');
@@ -1404,7 +1404,7 @@ function searchResultClickListener() {
       displayConf(this);
     }
   });
-}
+};
 
 const connectedItemCLickListener = () => {
   $('#connectedItems').on('click', '.connectedItem', function() {
@@ -1433,13 +1433,13 @@ const connectedItemCLickListener = () => {
   });
 };
 
-function listeners() {
+const listeners = () => {
   watchPlayerForm();
   watchTeamForm();
   watchConferenceForm();
   searchTypeController();
   searchResultClickListener();
   connectedItemCLickListener();
-}
+};
 
 $(listeners);
