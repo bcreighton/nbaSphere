@@ -181,6 +181,12 @@ button[type='submit'] {
   color: white;
 }
 
+#instruct {
+  color: white;
+  width: 35vw;
+  margin: 20px auto;
+}
+
 .container {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -774,6 +780,10 @@ p .vChannel {
     width: 95%;
   }
 
+  #instruct {
+    width: 60vw;
+  }
+
   .resultItem.team {
     width: 45%;
   }
@@ -895,6 +905,11 @@ p .vChannel {
 }
 
 @media screen and (max-width: 550px) {
+  #instruct {
+    width: 75vw;
+    font-size: 1.15rem;
+  }
+
   .resultItem {
     width: 45%;
   }

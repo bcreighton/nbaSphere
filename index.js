@@ -459,7 +459,7 @@ const getNBAPlayer = async player => {
     $('.loaderSearch').remove();
     $('#searchResultsContainer').prepend(
       `
-      <h2 class='error'>${e}</h2>
+      <h2 class='searchError'>${e}</h2>
       `
     );
   }
@@ -828,7 +828,7 @@ const getNBATeam = team => {
       $('.loaderSearch').remove();
       $('#searchResultsContainer').prepend(
         `
-        <h2 class='error'>${e}</h2>
+        <h2 class='SearchError'>${e}</h2>
         `
       );
     }
@@ -876,7 +876,7 @@ const getNBAConference = async conference => {
     $('.loaderSearch').remove();
     $('#searchResultsContainer').prepend(
       `
-      <h2 class='error'>${e}</h2>
+      <h2 class='searchError'>${e}</h2>
       `
     );
   }
@@ -1244,6 +1244,7 @@ const watchPlayerForm = () => {
   $('#nbaPlayerSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
+    $('#instruct').addClass('hidden');
 
     const playerInput = $('#playerLastName').val();
     const regex = /^[a-zA-Z]+$/;
@@ -1289,6 +1290,7 @@ const watchTeamForm = () => {
   $('#nbaTeamSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
+    $('#instruct').addClass('hidden');
 
     const teamInput = $('#teamName').val();
     const regex = /^[a-zA-Z]+$/;
@@ -1334,6 +1336,7 @@ const watchConferenceForm = () => {
   $('#nbaConferenceSearch').submit(event => {
     event.preventDefault();
     $('.searchError').remove();
+    $('#instruct').addClass('hidden');
 
     const conferenceInput = $('#conferenceName').val();
     const regex = /^[a-zA-Z]+$/;
